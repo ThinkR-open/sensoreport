@@ -6,3 +6,6 @@ dev_history.R
 $run_dev.*
 ^\.github$
 ^\.gitlab$
+^LICENSE\.md$
+^README\.Rmd$
+^codecov\.yml$
