@@ -27,7 +27,7 @@ jobs:
         shell: Rscript {0}
       - name: Adding server
         run: |
-          Rscript -e "rsconnect::addServer(httr::modify_url($CONNECT_URL, path = "__api__"), name = $CONNECT_NAME)"
+          Rscript -e "rsconnect::addServer(httr::modify_url($CONNECT_URL, path = '__api__'), name = $CONNECT_NAME)"
         shell: Rscript {0}
       - name: Connecting user
         run: |
