@@ -10,6 +10,7 @@ name: deploy-connect
 
 jobs:
   deploy-shiny:
+    environment: DEPLOY
     runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
