@@ -28,16 +28,31 @@ jobs:
         shell: Rscript {0}
       - name: Adding server
         run: |
-          print(Sys.getenv("CONNECT_NAME"))
-          rsconnect::addServer(httr::modify_url($CONNECT_URL, path = '__api__'), name = $CONNECT_NAME)
+          rsconnect::addServer(
+            httr::modify_url(Sys.getenv("CONNECT_URL"), path = "__api__"),
+            name = Sys.getenv("CONNECT_NAME")
+          )
         shell: Rscript {0}
       - name: Connecting user
         run: |
-          Rscript -e "rsconnect::connectApiUser(account = $CONNECT_USER, server = $CONNECT_NAME, apiKey = $CONNECT_TOKEN)"
+          rsconnect::connectApiUser(
+            account = Sys.getenv("CONNECT_USER"),
+            server = Sys.getenv("CONNECT_NAME"),
+            apiKey = Sys.getenv("CONNECT_TOKEN")
+          )
         shell: Rscript {0}
       - name: Deploying app
         run: |
-          Rscript -e "appFiles <- list.files(getwd(), recursive = TRUE)"
-          Rscript -e "appFiles <- appFiles[!grepl('.Renviron|.Rprofile|renv|rstudio_|deliverables|dev|data-raw|docker', appFiles)]"
-          Rscript -e "rsconnect::deployApp(appDir = getwd(), appName = $APP_NAME, appFiles = appFiles, appPrimaryDoc = NULL, account = $CONNECT_USER, server = $CONNECT_NAME, forceUpdate = TRUE, lint = FALSE)"
+          appFiles <- list.files(getwd(), recursive = TRUE)
+          appFiles <- appFiles[!grepl(".Renviron|.Rprofile|renv|rstudio_|deliverables|dev|data-raw|docker", appFiles)]
+          rsconnect::deployApp(
+            appDir = getwd(),
+            appName = Sys.getenv("APP_NAME"),
+            appFiles = appFiles,
+            appPrimaryDoc = NULL,
+            account = Sys.getenv("CONNECT_USER"),
+            server = Sys.getenv("CONNECT_NAME"),
+            forceUpdate = TRUE,
+            lint = FALSE
+          )
         shell: Rscript {0}
