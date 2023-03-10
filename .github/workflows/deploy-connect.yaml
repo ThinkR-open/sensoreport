@@ -1,0 +1,41 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+name: deploy-connect
+
+jobs:
+  deploy-shiny:
+    runs-on: macOS-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      CONNECT_URL: ${{ secrets.CONNECT_URL }}
+      CONNECT_NAME: ${{ secrets.CONNECT_NAME }}
+      CONNECT_USER: ${{ secrets.CONNECT_USER }}
+      CONNECT_TOKEN: ${{ secrets.CONNECT_TOKEN }}
+      APP_NAME: ${{ secrets.APP_NAME }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: r-lib/actions/setup-r@v2
+      - name: Installing rsconnect
+        run: |
+          install.packages("rsconnect")
+        shell: Rscript {0}
+      - name: Adding server
+        run: |
+          Rscript -e "rsconnect::addServer(httr::modify_url($CONNECT_URL, path = "__api__"), name = $CONNECT_NAME)"
+        shell: Rscript {0}
+      - name: Connecting user
+        run: |
+          Rscript -e "rsconnect::connectApiUser(account = $CONNECT_USER, server = $CONNECT_NAME, apiKey = $CONNECT_TOKEN)"
+        shell: Rscript {0}
+      - name: Deploying app
+        run: |
+          Rscript -e "appFiles <- list.files(getwd(), recursive = TRUE)"
+          Rscript -e "appFiles <- appFiles[!grepl('.Renviron|.Rprofile|renv|rstudio_|deliverables|dev|data-raw|docker', appFiles)]"
+          Rscript -e "rsconnect::deployApp(appDir = getwd(), appName = $APP_NAME, appFiles = appFiles, appPrimaryDoc = NULL, account = $CONNECT_USER, server = $CONNECT_NAME, forceUpdate = TRUE, lint = FALSE)"
+        shell: Rscript {0}
