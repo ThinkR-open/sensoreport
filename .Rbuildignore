@@ -9,4 +9,3 @@ $run_dev.*
 ^LICENSE\.md$
 ^README\.Rmd$
 ^codecov\.yml$
-app.R
