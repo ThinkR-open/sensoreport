@@ -1,0 +1,97 @@
+---
+title: "Development actions history"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+All commands that you use to use when developing packages...
+
+# First time just after creating the project
+
+- Fill the following chunk to create the DESCRIPTION of your package
+
+```{r description, eval=FALSE}
+# Describe your package
+fusen::fill_description(
+  pkg = here::here(),
+  fields = list(
+    Title = "Create Reproducible Sensory Reports",
+    Description = "A Shiny app to query a database in which QDA sensory data are stored, analyse data R package and generate reproducible and interactive HTML sensory reports. Such tool can enable sensory analysts and panel leaders to spend less time preparing reports, and add more value to their work.",
+    `Authors@R` = c(
+      person("Margot", "Brard", email = "margot@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6754-0659")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+)
+# Define License with use_*_license()
+usethis::use_mit_license("Margot Brard")
+```
+
+# Start using git
+
+```{r, eval=FALSE}
+usethis::use_git()
+# Deal with classical files to ignore
+usethis::git_vaccinate()
+# Use main for primary branch
+usethis::git_default_branch_rename()
+```
+
+# Set extra sources of documentation
+
+```{r, eval=FALSE}
+# Install a first time
+remotes::install_local()
+# README
+usethis::use_readme_rmd()
+# Code of Conduct
+usethis::use_code_of_conduct("contact@fake.com")
+# NEWS
+usethis::use_news_md()
+```
+
+**From now, you will need to "inflate" your package at least once to be able to use the following commands. Let's go to your flat template, and come back here later if/when needed.**
+
+
+# Package development tools
+## Use once
+
+```{r, eval=FALSE}
+# Pipe
+usethis::use_pipe()
+
+# package-level documentation
+usethis::use_package_doc()
+
+# Add new flat template
+fusen::add_flat_template(
+  flat_name = "database", 
+  template = "additional"
+)
+```
+
+## Use everytime needed
+
+```{r}
+# Simulate package installation
+pkgload::load_all()
+
+# Generate documentation and deal with dependencies
+attachment::att_amend_desc()
+
+# Check the package
+devtools::check()
+```
+
+# Share the package
+
+```{r}
+# set and try pkgdown documentation website
+usethis::use_pkgdown()
+pkgdown::build_site()
+
+# build the tar.gz with vignettes to share with others
+devtools::build(vignettes = TRUE)
+```
+
