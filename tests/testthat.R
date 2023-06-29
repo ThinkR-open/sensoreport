@@ -9,5 +9,6 @@
 library(testthat)
 library(sensoreport)
 library(SensoMineR)
+
 data("cocktail")
 test_check("sensoreport")

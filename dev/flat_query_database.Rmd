@@ -1,0 +1,85 @@
+---
+title: "flat_query_database.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# `connect_db()`: Connect to the sensory database
+
+```{r function-connect_db}
+#' Connect to the sensory database
+#'
+#' @param dbdir Character. Path to the sensory database.
+#' 
+#' @importFrom DBI dbConnect
+#' @importForm duckdb duckdb
+#'
+#' @return The connection to the database.
+#' 
+#' @export
+connect_db <- function(dbdir = app_sys("database", "sensory_db.duckdb")) {
+  
+  con_db <- tryCatch(
+    
+    DBI::dbConnect(
+      duckdb::duckdb(),
+      dbdir = dbdir,
+      read_only = TRUE
+      ), error = function(e) {
+      message("Connection to sensory database failed")
+    })
+ 
+  return(con_db)
+
+}
+```
+
+```{r examples-connect_db}
+con_db <- connect_db()
+
+# List tables in the sensory database
+DBI::dbListTables(con_db)
+
+# Read the sensory profiles
+dplyr::tbl(con_db, "PROFILES")
+  
+# Disconnect
+DBI::dbDisconnect(con_db, shutdown = TRUE)
+```
+
+```{r tests-connect_db}
+test_that("query_database works", {
+
+  con_db <- connect_db()
+  
+  # List tables in the sensory database
+  expect_equal(
+    object = DBI::dbListTables(con_db), 
+    expected = c("HEDONIC", "PRODUCTS", "PROFILES", "SESSIONS")
+  )
+  
+  # Disconnect
+  DBI::dbDisconnect(con_db, shutdown = TRUE)
+  
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_query_database.Rmd", 
+               vignette_name = "Query the database", 
+               check = FALSE)
+```
+

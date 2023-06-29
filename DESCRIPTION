@@ -26,9 +26,13 @@ Imports:
     stringr,
     tidyr
 Suggests: 
+    knitr,
+    rmarkdown,
     SensoMineR,
     testthat,
     withr
+VignetteBuilder: 
+    knitr
 Config/fusen/version: 0.5.0.9008
 Config/Needs/website: ThinkR-open/thinkrtemplate
 Encoding: UTF-8

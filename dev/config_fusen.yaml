@@ -19,3 +19,16 @@ flat_create_database.Rmd:
     check: false
     document: true
     overwrite: ask
+flat_query_database.Rmd:
+  path: dev/flat_query_database.Rmd
+  state: active
+  R: R/connect_db.R
+  tests: tests/testthat/test-connect_db.R
+  vignettes: vignettes/query-the-database.Rmd
+  inflate:
+    flat_file: dev/flat_query_database.Rmd
+    vignette_name: Query the database
+    open_vignette: true
+    check: false
+    document: true
+    overwrite: ask
