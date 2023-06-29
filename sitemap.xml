@@ -22,6 +22,12 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/pipe.html</loc>
+  </url>
+  <url>
     <loc>/reference/run_app.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sensoreport-package.html</loc>
   </url>
 </urlset>
