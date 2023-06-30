@@ -32,7 +32,7 @@ Suggests:
     testthat,
     withr
 Remotes:
-    url::https://packagemanager.posit.co/cran/latest/src/contrib/Archive/duckdb/duckdb_0.6.2.tar.gz
+    cran/duckdb@0.6.2
 VignetteBuilder: 
     knitr
 Config/fusen/version: 0.5.0.9008
