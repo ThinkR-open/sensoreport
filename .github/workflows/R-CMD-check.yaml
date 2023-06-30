@@ -63,6 +63,11 @@ jobs:
           remotes::install_local()
         shell: Rscript {0}
 
+      - name: Checking if the database is accessible
+        run: |
+          print(system.file(file.path("database", "sensory_db.duckdb"), package = "sensoreport"))
+        shell: Rscript {0}
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
