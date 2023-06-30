@@ -4,12 +4,10 @@ test_that("perform_unidim_analysis works", {
 
   data("data_profiles_toy")
   
-  my_unidim_plots <- plot_unidim_analysis(
+  my_unidim_plot <- plot_unidim_analysis(
     data = data_profiles_toy
   )
   
-  expect_true(inherits(my_unidim_plots$stat_plot, "gg"))
-    
-  expect_true(inherits(my_unidim_plots$inter_plot, "plotly"))
+  expect_true(inherits(my_unidim_plot, "plotly"))
 
 })
