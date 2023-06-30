@@ -17,7 +17,7 @@
 #' DBI::dbListTables(con_db)
 #'
 #' # Read the sensory profiles
-#' dplyr::tbl(con_db, "PROFILES")
+#' # dplyr::tbl(con_db, "PROFILES")
 #'   
 #' # Disconnect
 #' DBI::dbDisconnect(con_db, shutdown = TRUE)
