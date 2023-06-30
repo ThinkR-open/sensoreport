@@ -1,0 +1,34 @@
+flat_create_database.Rmd:
+  path: dev/flat_create_database.Rmd
+  state: active
+  R:
+  - R/create_hedonic_table.R
+  - R/create_profiles_table.R
+  - R/create_toy_data.R
+  - R/save_data_in_db.R
+  tests:
+  - tests/testthat/test-create_toy_data.R
+  - tests/testthat/test-create_profiles_table.R
+  - tests/testthat/test-create_hedonic_table.R
+  - tests/testthat/test-save_data_in_db.R
+  vignettes: []
+  inflate:
+    flat_file: dev/flat_create_database.Rmd
+    vignette_name: .na
+    open_vignette: true
+    check: false
+    document: true
+    overwrite: 'yes'
+flat_query_database.Rmd:
+  path: dev/flat_query_database.Rmd
+  state: active
+  R: R/connect_db.R
+  tests: tests/testthat/test-connect_db.R
+  vignettes: vignettes/query-the-database.Rmd
+  inflate:
+    flat_file: dev/flat_query_database.Rmd
+    vignette_name: Query the database
+    open_vignette: true
+    check: false
+    document: true
+    overwrite: 'yes'

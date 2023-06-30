@@ -14,11 +14,27 @@ Description: A Shiny app to query a database in which QDA sensory data are
 License: MIT + file LICENSE
 Imports: 
     config,
+    DBI,
+    dplyr,
     golem,
+    here,
     magrittr,
-    shiny
+    purrr,
+    RSQLite,
+    shiny,
+    stats,
+    stringr,
+    tidyr
 Suggests: 
-    testthat
+    dbplyr,
+    knitr,
+    rmarkdown,
+    SensoMineR,
+    testthat,
+    withr
+VignetteBuilder: 
+    knitr
+Config/fusen/version: 0.5.0.9008
 Config/Needs/website: ThinkR-open/thinkrtemplate
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

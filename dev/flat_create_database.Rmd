@@ -1,0 +1,624 @@
+---
+title: "flat_create_database.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+library(SensoMineR)
+library(duckdb)
+library(DBI)
+library(purrr)
+library(dplyr)
+library(stringr)
+library(tibble)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# Create the toy sensory database (only for the developers of the package)
+
+```{r eval=FALSE}
+data("cocktail")
+
+# 1 - Create the table with toy sensory profiles
+
+list_profiles_data <- list()
+
+for (i in 1:6) {
+  list_profiles_data[[i]] <- create_toy_data(
+    data = senso.cocktail
+    ) %>% 
+    mutate(SESSION = paste0("SESS230", i))
+}
+
+profiles_table <- create_profiles_table(
+  list_data = list_profiles_data
+)
+
+save_data_in_db(
+  table = profiles_table,
+  name_table = "PROFILES", 
+  overwrite = TRUE
+)
+
+# 2 - Create the table with toy hedonic data
+
+list_hedonic_data <- list()
+
+for (i in 1:6) {
+  list_hedonic_data[[i]] <- create_toy_data(
+    data = hedo.cocktail
+    ) %>% 
+    mutate(SESSION = paste0("SESS230", i))
+}
+
+hedonic_table <- create_hedonic_table(
+  list_data = list_hedonic_data
+)
+
+save_data_in_db(
+  table = hedonic_table,
+  name_table = "HEDONIC", 
+  overwrite = TRUE
+)
+
+# 3 - Create the table with infos about sessions
+
+session_table <- tibble(
+  SESSION = paste0("SESS230", 1:6), 
+  DATE = c("2023-01-10", "2023-04-15", "2023-04-30",
+           "2023-05-21", "2023-06-01", "2023-06-28"),
+  DEPARTMENT = rep("SENSO", 6), 
+  COUNTRY = c("France", "US", "US",
+              "France", "US", "France"),
+  LEADER = c("Diane D", "Murielle B", "Margot B",
+             "Swann F", "Estelle P", "Florence M")
+)
+
+save_data_in_db(
+  table = session_table,
+  name_table = "SESSIONS", 
+  overwrite = TRUE
+)
+
+# 4 - Create the table with infos about products
+
+products_table <- tibble(
+  PRODUCT = hedonic_table %>% distinct(PRODUCT) %>% pull(),
+  INFO = rep("Lorem ipsum dolor sit amet", 16),
+  BRAND = rep(c("Brand A", "Brand B", "Brand C", "Brand D"), 
+              4)
+)
+
+save_data_in_db(
+  table = products_table,
+  name_table = "PRODUCTS", 
+  overwrite = TRUE
+)
+```
+
+# Details of functions
+
+## `create_toy_data()`: Create toy sensory datasets (sensory profiles & hedonic)
+
+```{r function-create_toy_data}
+#' Create toy sensory datasets (sensory profiles & hedonic)
+#' 
+#' Use the cocktail datasets of the {SensoMineR} package
+#' 
+#' @param data Dataframe. Original dataset to be used.
+#' @param mean Numeric. Mean to be used in rnorm to generate noise.
+#' @param sd Numeric. Sd to be used in rnorm to generate noise.
+#' 
+#' @importFrom stats rnorm
+#'
+#' @return Tibble. The original dataset with some noise (uniform distribution)
+create_toy_data <- function(data, 
+                            mean = 0, 
+                            sd = 1){
+  
+  toy_data <- data +
+    matrix(rnorm(
+      n = nrow(data) * ncol(data),
+      mean = mean,
+      sd = sd
+    ),
+    nrow = nrow(data),
+    ncol = ncol(data))
+    
+  return(toy_data)
+  
+}
+```
+
+```{r examples-create_toy_data}
+data(cocktail)
+
+create_toy_data(
+  data = senso.cocktail
+)
+
+create_toy_data(
+  data = hedo.cocktail
+)
+```
+
+```{r tests-create_toy_data}
+test_that("create_toy_data works", {
+  
+  withr::with_seed(seed = 123, {
+    
+    expect_equal(
+      object = create_toy_data(data = senso.cocktail)[1:10, 1:10],
+      expected = structure(
+        list(
+          color.intensity = c(
+            7.39785735344779,
+            3.18648951051672,
+            3.64204131414912,
+            7.69550839142458,
+            3.62928773516095,
+            9.59006498688328,
+            9.0442492059892,
+            6.94327176539347,
+            2.77148014810647,
+            2.67933802990004
+          ),
+          odor.intensity = c(
+            6.08118347822924,
+            3.46004984337036,
+            6.86802290156369,
+            5.56887559227207,
+            4.22384329401316,
+            5.25035808534171,
+            4.52566255169276,
+            4.52110877070886,
+            4.08329373215074,
+            2.62497368925759
+          ),
+          odor.orange = c(
+            4.64512566104502,
+            4.12813348753304,
+            4.02991408163749,
+            3.18864025410009,
+            6.17891765353759,
+            3.89642128942328,
+            4.61070433626008,
+            5.16119599898762,
+            5.09696002107949,
+            5.8337497219804
+          ),
+          odor.banana = c(
+            3.86079811833632,
+            5.12496393352817,
+            7.79498551399475,
+            8.1381202446513,
+            1.62379654270868,
+            6.28526928401446,
+            2.02422901434073,
+            4.68313760442954,
+            1.95124719576978,
+            4.25128074963607
+          ),
+          odor.mango = c(
+            4.88654177352442,
+            3.84519564140426,
+            3.73987677862943,
+            3.1780042267305,
+            5.50560046787974,
+            7.84175168562714,
+            4.63396883394346,
+            2.06583112435919,
+            4.38073852446226,
+            3.12413223741761
+          ),
+          odor.lemon = c(
+            6.25576418589989,
+            4.56736340112633,
+            3.33767296820759,
+            4.99220254851883,
+            5.65451343818125,
+            4.7221989639157,
+            6.48725601314935,
+            5.1018484908338,
+            4.04906841446877,
+            5.14880761845109
+          ),
+          strongness = c(
+            9.14566599301658,
+            7.40761062618519,
+            5.84763264089952,
+            4.56566209969322,
+            6.5395934363007,
+            6.92355070915653,
+            6.04497512153763,
+            5.67870740060227,
+            4.88171443273498,
+            5.41330527519108
+          ),
+          sweet = c(
+            4.59045029171084,
+            7.69443803447546,
+            7.72774020394346,
+            8.63448636216671,
+            5.02609319414894,
+            4.48804399169462,
+            5.19196265396642,
+            5.06670420939509,
+            6.20097959710013,
+            5.2191923858152
+          ),
+          acidity = c(
+            6.12147636586987,
+            3.2203589138764,
+            5.81955085842335,
+            3.24317105307921,
+            7.74956592199294,
+            7.07750316766038,
+            4.53008577845948,
+            6.29258721341418,
+            4.03935992907518,
+            6.32328051087733
+          ),
+          bitterness = c(
+            0.398463826425407,
+            1.0107604778297,
+            0.3299114150041,
+            2.31291677297583,
+            4.05677594052567,
+            0.837969523964821,
+            2.82940584747518,
+            2.76737524100091,
+            2.41915957895012,
+            1.11662339172299
+          )
+        ),
+        row.names = c("1", "2", "3", "4", "5", "6", "7", "8", "9",
+                      "10"),
+        class = "data.frame"
+      )
+    )
+    
+  })
+  
+})
+```
+
+## `create_profiles_table()`: Create the toy sensory profiles table
+
+```{r function-create_profile_table}
+#' Create the toy sensory profiles table
+#' 
+#' @importFrom purrr map
+#' @importFrom dplyr mutate rename bind_rows
+#' @importFrom tidyr pivot_longer
+#' @importFrom stringr str_replace_all str_to_title
+#' 
+#' @return Tibble. The toy sensory profiles table, in a long format.
+create_profiles_table <- function(list_data){
+  
+  profiles_table <- list_data %>%
+    map(
+      ~ .x %>%
+        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) %>%
+        pivot_longer(cols = -c(PRODUCT, SESSION)) %>%
+        rename(ATTRIBUTE = name,
+               SCORE = value) %>%
+        mutate(
+          ATTRIBUTE = str_replace_all(ATTRIBUTE, "\\.", " "),
+          ATTRIBUTE = str_to_title(ATTRIBUTE)
+        )
+    ) %>% 
+    bind_rows()
+    
+  return(profiles_table)
+  
+}
+```
+
+```{r examples-create_profile_table}
+list_profiles_data <- list()
+
+for (i in 1:6) {
+  list_profiles_data[[i]] <- create_toy_data(
+    data = senso.cocktail
+    ) %>% 
+    mutate(SESSION = paste0("SESS230", i))
+}
+
+create_profiles_table(
+  list_data = list_profiles_data
+)
+```
+
+```{r tests-create_profile_table}
+test_that("create_toy_data works", {
+  
+  withr::with_seed(seed = 123, {
+    
+    list_profiles_data <- list()
+    
+    for (i in 1:6) {
+      list_profiles_data[[i]] <- create_toy_data(data = senso.cocktail) %>%
+        mutate(SESSION = paste0("SESS230", i))
+    }
+    
+    expect_equal(
+      object = create_profiles_table(list_data = list_profiles_data)[1:10, ],
+      expected = structure(
+        list(
+          SESSION = c(
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301"
+          ),
+          PRODUCT = c(
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1"
+          ),
+          ATTRIBUTE = c(
+            "Color Intensity",
+            "Odor Intensity",
+            "Odor Orange",
+            "Odor Banana",
+            "Odor Mango",
+            "Odor Lemon",
+            "Strongness",
+            "Sweet",
+            "Acidity",
+            "Bitterness"
+          ),
+          SCORE = c(
+            7.39785735344779,
+            6.08118347822924,
+            4.64512566104502,
+            3.86079811833632,
+            4.88654177352442,
+            6.25576418589989,
+            9.14566599301658,
+            4.59045029171084,
+            6.12147636586987,
+            0.398463826425407
+          )
+        ),
+        row.names = c(NA,-10L),
+        class = c("tbl_df", "tbl", "data.frame")
+      )
+    )
+    
+  })
+})
+```
+
+## `create_hedonic_table()`: Create the toy sensory hedonic table
+
+```{r function-create_hedonic_table}
+#' Create the toy sensory hedonic table
+#' 
+#' @importFrom purrr map
+#' @importFrom dplyr mutate rename bind_rows
+#' @importFrom tidyr pivot_longer
+#' 
+#' @return Tibble. The toy sensory profiles table, in a long format.
+create_hedonic_table <- function(list_data){
+  
+  hedonic_table <- list_data %>%
+    map(
+      ~ .x %>%
+        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) %>%
+        pivot_longer(cols = -c(PRODUCT, SESSION)) %>%
+        rename(CONSUMER = name,
+               SCORE = value)
+    ) %>% 
+    bind_rows()
+    
+  return(hedonic_table)
+  
+}
+```
+
+```{r examples-create_hedonic_table}
+list_hedonic_data <- list()
+
+for (i in 1:6) {
+  list_hedonic_data[[i]] <- create_toy_data(
+    data = hedo.cocktail
+    ) %>% 
+    mutate(SESSION = paste0("SESS230", i))
+}
+
+create_hedonic_table(
+  list_data = list_hedonic_data
+)
+```
+
+```{r tests-create_hedonic_table}
+test_that("create_toy_data works", {
+  
+  withr::with_seed(seed = 123, {
+    
+    list_profiles_data <- list()
+    
+    for (i in 1:6) {
+      list_profiles_data[[i]] <- create_toy_data(data = senso.cocktail) %>%
+        mutate(SESSION = paste0("SESS230", i))
+    }
+    
+    expect_equal(
+      object = create_profiles_table(list_data = list_profiles_data)[1:10, ],
+      expected = structure(
+        list(
+          SESSION = c(
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301",
+            "SESS2301"
+          ),
+          PRODUCT = c(
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1",
+            "PROD1"
+          ),
+          ATTRIBUTE = c(
+            "Color Intensity",
+            "Odor Intensity",
+            "Odor Orange",
+            "Odor Banana",
+            "Odor Mango",
+            "Odor Lemon",
+            "Strongness",
+            "Sweet",
+            "Acidity",
+            "Bitterness"
+          ),
+          SCORE = c(
+            7.39785735344779,
+            6.08118347822924,
+            4.64512566104502,
+            3.86079811833632,
+            4.88654177352442,
+            6.25576418589989,
+            9.14566599301658,
+            4.59045029171084,
+            6.12147636586987,
+            0.398463826425407
+          )
+        ),
+        row.names = c(NA,-10L),
+        class = c("tbl_df", "tbl", "data.frame")
+      )
+    )
+    
+  })
+})
+```
+
+## `save_data_in_db()`: Save toy sensory datasets in the duckdb
+
+```{r function-save_data_in_db}
+#' Save toy sensory datasets in the duckdb
+#' 
+#' @param table Dataframe. Table to be saved.
+#' @param name_table Character. Name of the table to be saved.
+#' @param dbdir Character. Directory of the database.
+#' @param overwrite Boolean. If an existing table can be overwritten.
+#' 
+#' @importFrom DBI dbConnect dbWriteTable dbDisconnect
+#' @importFrom here here
+#'
+#' @return Nothing. Used for side effect.
+#' 
+#' @noRd
+save_data_in_db <- function(table, 
+                            name_table, 
+                            dbdir = here::here("inst", "database", "sensory_db.sqlite"),
+                            overwrite = FALSE){
+  
+  # Open the database (or create a new one if it does not exist)
+  con_db <- connect_db(
+    dbdir = dbdir,
+    read_only = FALSE
+  )
+
+  # Write the table in the database
+  dbWriteTable(
+    con_db, 
+    name = name_table, 
+    value = table, 
+    overwrite = overwrite
+  )
+  
+  # Disconnect
+  DBI::dbDisconnect(con_db, shutdown = TRUE)
+
+}
+```
+  
+```{r example-save_data_in_db}
+# Create a temp dir
+temp_directory <- tempfile(pattern = "db-")
+dir.create(temp_directory)
+
+# Save data in the database
+save_data_in_db(
+  table = iris,
+  name_table = "IRIS",
+  dbdir = file.path(temp_directory, "sensory_db.sqlite")
+)
+
+# Read data in the database
+con_db <- connect_db(
+  dbdir = file.path(temp_directory, "sensory_db.sqlite")
+)
+
+DBI::dbReadTable(
+  con_db, 
+  "IRIS"
+)
+
+DBI::dbDisconnect(con_db)
+```
+  
+```{r tests-save_data_in_db}
+test_that("save_data_in_db works", {
+  
+  # Create a temp dir
+  temp_directory <- tempfile(pattern = "db-")
+  dir.create(temp_directory)
+
+  # Save data in the database
+  expect_error(save_data_in_db(
+    table = iris,
+    name_table = "IRIS",
+    dbdir = file.path(temp_directory, "sensory_db.sqlite")
+  ),
+  NA)
+
+  })
+```
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_create_database.Rmd", 
+  vignette_name = NA, 
+  check = FALSE, 
+  overwrite = TRUE
+)
+```
+
