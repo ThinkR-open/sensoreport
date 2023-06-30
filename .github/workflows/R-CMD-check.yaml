@@ -42,7 +42,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: opt-nc/setup-duckdb-action@v1.0.0
+      - uses: opt-nc/setup-duckdb-action
 
       - uses: actions/checkout@v3
 
