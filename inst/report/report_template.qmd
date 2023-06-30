@@ -1,0 +1,75 @@
+---
+title: "Report"
+format: html
+editor: visual
+---
+
+```{r}
+#| include: false
+# Define toy parameters
+session <- "SESS2301"
+products <- c("PROD1", "PROD2", "PROD3", "PROD4", 
+              "PROD5", "PROD6", "PROD7", "PROD8", 
+              "PROD9", "PROD10", "PROD11", "PROD12", 
+              "PROD13", "PROD14", "PROD15", "PROD16")
+```
+
+```{r}
+#| include: false
+library(sensoreport)
+library(dplyr)
+library(dbplyr)
+library(DBI)
+```
+
+```{r}
+#| echo: false
+con_db <- connect_db()
+```
+
+## Explore the data
+
+### Products
+
+```{r}
+#| echo: false
+data_products <- tbl(con_db, "PRODUCTS") %>%
+  filter(PRODUCT %in% products) %>%
+  collect()
+
+data_products %>% 
+  DT::datatable()
+```
+
+### Sensory profiles
+
+```{r}
+#| echo: false
+data_profiles <- tbl(con_db, "PROFILES") %>% 
+  filter(SESSION == session & PRODUCT %in% products) %>% 
+  select(-SESSION) %>% 
+  collect()
+
+data_profiles %>% 
+  mutate(SCORE = round(SCORE, 1)) %>% 
+  DT::datatable()
+```
+
+### Hedonic data
+
+```{r}
+#| echo: false
+data_hedonic <- tbl(con_db, "HEDONIC") %>% 
+  filter(SESSION == session & PRODUCT %in% products) %>% 
+  select(-SESSION) %>% 
+  collect()
+
+data_hedonic %>% 
+  mutate(SCORE = round(SCORE, 1)) %>% 
+  DT::datatable()
+```
+
+```{r}
+#| echo: false
+dbDisconnect(con_db, shutdown = TRUE)
+```
