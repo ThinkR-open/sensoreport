@@ -3,6 +3,7 @@
 #' Connect to the sensory database
 #'
 #' @param dbdir Character. Path to the sensory database.
+#' @param read_only Logical. Define a read only connection or not.
 #' 
 #' @importFrom DBI dbConnect
 #' @importFrom RSQLite SQLite
@@ -17,8 +18,17 @@
 #' DBI::dbListTables(con_db)
 #'
 #' # Read the sensory profiles
-#' # dplyr::tbl(con_db, "PROFILES")
-#'   
+#' dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PROFILES LIMIT 10"))
+#'
+#' # Read the hedonic data
+#' dplyr::tbl(con_db, dplyr::sql("SELECT * FROM HEDONIC LIMIT 10"))
+#'
+#' # Read the sessions data
+#' dplyr::tbl(con_db, dplyr::sql("SELECT * FROM SESSIONS"))
+#'
+#' # Read the products data
+#' dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PRODUCTS LIMIT 10"))
+#'
 #' # Disconnect
 #' DBI::dbDisconnect(con_db, shutdown = TRUE)
 connect_db <- function(dbdir = app_sys("database", "sensory_db.sqlite"), 

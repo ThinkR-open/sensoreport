@@ -97,7 +97,7 @@ products_table <- tibble(
 )
 
 save_data_in_db(
-  table = session_table,
+  table = products_table,
   name_table = "PRODUCTS", 
   overwrite = TRUE
 )
