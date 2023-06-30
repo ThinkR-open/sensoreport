@@ -1,0 +1,92 @@
+---
+title: "flat_perform_unidim_analysis.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# `plot_unidim_analysis()`: Create the plot with the unidimensional analysis
+
+```{r function-perform_unidim_analysis}
+#' Create the plot with the unidimensional analysis
+#' 
+#' @param data Tibble. The sensory data.
+#' 
+#' @importFrom ggplot2 ggplot aes geom_col labs facet_wrap theme_minimal theme element_blank
+#' @importFrom plotly ggplotly
+#' @importFrom dplyr vars
+#' 
+#' @return A ggplotly
+#' @export
+plot_unidim_analysis <- function(data) {
+  
+  # Static plot
+  unidim_plot <- ggplot(data = data) +
+    aes(x = PRODUCT,
+        y = SCORE,
+        fill = PRODUCT) +
+    geom_col() +
+    labs(x = "",
+         y = "Intensity on a 0-10 scale") +
+    facet_wrap(facets = vars(ATTRIBUTE)) +
+    theme_minimal() +
+    theme(axis.text.x = element_blank(),
+          axis.ticks.x = element_blank())
+  
+  # Interactive plot
+  inter_plot <- ggplotly(
+    p = unidim_plot,
+    tooltip = c("x", "y")
+  )
+  
+  return(inter_plot)
+  
+}
+```
+
+```{r examples-perform_unidim_analysis, out.width='100%', out.height='100%'}
+data("data_profiles_toy")
+
+plot_unidim_analysis(
+  data = data_profiles_toy
+)
+```
+
+```{r tests-perform_unidim_analysis}
+test_that("perform_unidim_analysis works", {
+
+  data("data_profiles_toy")
+  
+  my_unidim_plots <- plot_unidim_analysis(
+    data = data_profiles_toy
+  )
+  
+  expect_true(inherits(my_unidim_plots$stat_plot, "gg"))
+    
+  expect_true(inherits(my_unidim_plots$inter_plot, "plotly"))
+
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_perform_unidim_analysis.Rmd", 
+  vignette_name = "b - Perform the unidimensional sensory analysis", 
+  check = FALSE, 
+  overwrite = TRUE,
+  open_vignette = FALSE
+  )
+```
+

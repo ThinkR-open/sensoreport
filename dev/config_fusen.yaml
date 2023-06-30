@@ -19,15 +19,41 @@ flat_create_database.Rmd:
     check: false
     document: true
     overwrite: 'yes'
+flat_perform_multidim_analysis.Rmd:
+  path: dev/flat_perform_multidim_analysis.Rmd
+  state: active
+  R: R/perform_senso_mapping.R
+  tests: tests/testthat/test-perform_senso_mapping.R
+  vignettes: vignettes/c-perform-the-multidimensional-sensory-analysis--mapping-.Rmd
+  inflate:
+    flat_file: dev/flat_perform_multidim_analysis.Rmd
+    vignette_name: c - Perform the multidimensional sensory analysis (mapping)
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
+flat_perform_unidim_analysis.Rmd:
+  path: dev/flat_perform_unidim_analysis.Rmd
+  state: active
+  R: R/plot_unidim_analysis.R
+  tests: tests/testthat/test-plot_unidim_analysis.R
+  vignettes: vignettes/b-perform-the-unidimensional-sensory-analysis.Rmd
+  inflate:
+    flat_file: dev/flat_perform_unidim_analysis.Rmd
+    vignette_name: b - Perform the unidimensional sensory analysis
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
 flat_query_database.Rmd:
   path: dev/flat_query_database.Rmd
   state: active
   R: R/connect_db.R
   tests: tests/testthat/test-connect_db.R
-  vignettes: vignettes/query-the-database.Rmd
+  vignettes: vignettes/a-query-the-database.Rmd
   inflate:
     flat_file: dev/flat_query_database.Rmd
-    vignette_name: Query the database
+    vignette_name: a - Query the database
     open_vignette: true
     check: false
     document: true
