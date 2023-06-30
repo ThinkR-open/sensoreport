@@ -1,8 +1,8 @@
 ---
-title: "Query the database"
+title: "a - Query the database"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{query-the-database}
+  %\VignetteIndexEntry{a-query-the-database}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

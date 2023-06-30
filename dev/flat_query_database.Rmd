@@ -92,7 +92,7 @@ test_that("query_database works", {
 # Execute in the console directly
 fusen::inflate(
   flat_file = "dev/flat_query_database.Rmd", 
-  vignette_name = "Query the database", 
+  vignette_name = "a - Query the database", 
   check = FALSE, 
   overwrite = TRUE
 )

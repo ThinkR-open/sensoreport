@@ -12,13 +12,19 @@ Description: A Shiny app to query a database in which QDA sensory data are
     analysts and panel leaders to spend less time preparing reports, and
     add more value to their work.
 License: MIT + file LICENSE
+Depends: 
+    R (>= 2.10)
 Imports: 
     config,
     DBI,
     dplyr,
+    FactoMineR,
+    ggplot2,
+    glue,
     golem,
     here,
     magrittr,
+    plotly,
     purrr,
     RSQLite,
     shiny,
@@ -37,5 +43,6 @@ VignetteBuilder:
 Config/fusen/version: 0.5.0.9008
 Config/Needs/website: ThinkR-open/thinkrtemplate
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
