@@ -22,21 +22,23 @@ pkgload::load_all(export_all = FALSE)
 #' @param dbdir Character. Path to the sensory database.
 #' 
 #' @importFrom DBI dbConnect
-#' @importForm duckdb duckdb
+#' @importFrom RSQLite SQLite
 #'
 #' @return The connection to the database.
 #' 
 #' @export
-connect_db <- function(dbdir = app_sys("database", "sensory_db.duckdb")) {
+connect_db <- function(dbdir = app_sys("database", "sensory_db.sqlite"), 
+                       read_only = TRUE) {
   
   con_db <- tryCatch(
     
     DBI::dbConnect(
-      duckdb::duckdb(),
-      dbdir = dbdir,
-      read_only = TRUE
+      RSQLite::SQLite(),
+      dbdir,
+      read_only = read_only
       ), error = function(e) {
       message("Connection to sensory database failed")
+        
     })
  
   return(con_db)
@@ -78,8 +80,11 @@ test_that("query_database works", {
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(flat_file = "dev/flat_query_database.Rmd", 
-               vignette_name = "Query the database", 
-               check = FALSE)
+fusen::inflate(
+  flat_file = "dev/flat_query_database.Rmd", 
+  vignette_name = "Query the database", 
+  check = FALSE, 
+  overwrite = TRUE
+)
 ```
 

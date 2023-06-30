@@ -5,7 +5,7 @@
 #' @param dbdir Character. Path to the sensory database.
 #' 
 #' @importFrom DBI dbConnect
-#' @importForm duckdb duckdb
+#' @importFrom RSQLite SQLite
 #'
 #' @return The connection to the database.
 #' 
@@ -21,16 +21,18 @@
 #'   
 #' # Disconnect
 #' DBI::dbDisconnect(con_db, shutdown = TRUE)
-connect_db <- function(dbdir = app_sys("database", "sensory_db.duckdb")) {
+connect_db <- function(dbdir = app_sys("database", "sensory_db.sqlite"), 
+                       read_only = TRUE) {
   
   con_db <- tryCatch(
     
     DBI::dbConnect(
-      duckdb::duckdb(),
-      dbdir = dbdir,
-      read_only = TRUE
+      RSQLite::SQLite(),
+      dbdir,
+      read_only = read_only
       ), error = function(e) {
       message("Connection to sensory database failed")
+        
     })
  
   return(con_db)

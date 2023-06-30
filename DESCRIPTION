@@ -16,11 +16,11 @@ Imports:
     config,
     DBI,
     dplyr,
-    duckdb,
     golem,
     here,
     magrittr,
     purrr,
+    RSQLite,
     shiny,
     stats,
     stringr,
@@ -31,8 +31,6 @@ Suggests:
     SensoMineR,
     testthat,
     withr
-Remotes:
-    cran/duckdb@0.6.2
 VignetteBuilder: 
     knitr
 Config/fusen/version: 0.5.0.9008

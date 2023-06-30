@@ -4,7 +4,7 @@
 \alias{connect_db}
 \title{Connect to the sensory database}
 \usage{
-connect_db(dbdir = app_sys("database", "sensory_db.duckdb"))
+connect_db(dbdir = app_sys("database", "sensory_db.sqlite"), read_only = TRUE)
 }
 \arguments{
 \item{dbdir}{Character. Path to the sensory database.}

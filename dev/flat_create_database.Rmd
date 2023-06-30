@@ -24,6 +24,8 @@ pkgload::load_all(export_all = FALSE)
 # Create the toy sensory database (only for the developers of the package)
 
 ```{r eval=FALSE}
+data("cocktail")
+
 # 1 - Create the table with toy sensory profiles
 
 list_profiles_data <- list()
@@ -39,7 +41,7 @@ profiles_table <- create_profiles_table(
   list_data = list_profiles_data
 )
 
-save_data_in_duckdb(
+save_data_in_db(
   table = profiles_table,
   name_table = "PROFILES", 
   overwrite = TRUE
@@ -60,7 +62,7 @@ hedonic_table <- create_hedonic_table(
   list_data = list_hedonic_data
 )
 
-save_data_in_duckdb(
+save_data_in_db(
   table = hedonic_table,
   name_table = "HEDONIC", 
   overwrite = TRUE
@@ -79,7 +81,7 @@ session_table <- tibble(
              "Swann F", "Estelle P", "Florence M")
 )
 
-save_data_in_duckdb(
+save_data_in_db(
   table = session_table,
   name_table = "SESSIONS", 
   overwrite = TRUE
@@ -94,7 +96,7 @@ products_table <- tibble(
               4)
 )
 
-save_data_in_duckdb(
+save_data_in_db(
   table = session_table,
   name_table = "PRODUCTS", 
   overwrite = TRUE
@@ -525,9 +527,9 @@ test_that("create_toy_data works", {
 })
 ```
 
-## `save_data_in_duckdb()`: Save toy sensory datasets in the duckdb
+## `save_data_in_db()`: Save toy sensory datasets in the duckdb
 
-```{r function-save_data_in_duckdb}
+```{r function-save_data_in_db}
 #' Save toy sensory datasets in the duckdb
 #' 
 #' @param table Dataframe. Table to be saved.
@@ -536,20 +538,18 @@ test_that("create_toy_data works", {
 #' @param overwrite Boolean. If an existing table can be overwritten.
 #' 
 #' @importFrom DBI dbConnect dbWriteTable dbDisconnect
-#' @importFrom duckdb duckdb
 #' @importFrom here here
 #'
 #' @return Nothing. Used for side effect.
 #' 
 #' @noRd
-save_data_in_duckdb <- function(table, 
-                                name_table, 
-                                dbdir = here::here("inst", "database", "sensory_db.duckdb"),
-                                overwrite = FALSE){
+save_data_in_db <- function(table, 
+                            name_table, 
+                            dbdir = here::here("inst", "database", "sensory_db.sqlite"),
+                            overwrite = FALSE){
   
   # Open the database (or create a new one if it does not exist)
-  con_db <- DBI::dbConnect(
-    duckdb::duckdb(),
+  con_db <- connect_db(
     dbdir = dbdir,
     read_only = FALSE
   )
@@ -568,31 +568,43 @@ save_data_in_duckdb <- function(table,
 }
 ```
   
-```{r example-save_data_in_duckdb}
+```{r example-save_data_in_db}
 # Create a temp dir
 temp_directory <- tempfile(pattern = "db-")
 dir.create(temp_directory)
 
 # Save data in the database
-save_data_in_duckdb(
+save_data_in_db(
   table = iris,
   name_table = "IRIS",
-  dbdir = file.path(temp_directory, "sensory_db.duckdb")
+  dbdir = file.path(temp_directory, "sensory_db.sqlite")
 )
+
+# Read data in the database
+con_db <- connect_db(
+  dbdir = file.path(temp_directory, "sensory_db.sqlite")
+)
+
+DBI::dbReadTable(
+  con_db, 
+  "IRIS"
+)
+
+DBI::dbDisconnect(con_db)
 ```
   
-```{r tests-save_data_in_duckdb}
-test_that("save_data_in_duckdb works", {
+```{r tests-save_data_in_db}
+test_that("save_data_in_db works", {
   
   # Create a temp dir
   temp_directory <- tempfile(pattern = "db-")
   dir.create(temp_directory)
 
   # Save data in the database
-  expect_error(save_data_in_duckdb(
+  expect_error(save_data_in_db(
     table = iris,
     name_table = "IRIS",
-    dbdir = file.path(temp_directory, "sensory_db.duckdb")
+    dbdir = file.path(temp_directory, "sensory_db.sqlite")
   ),
   NA)
 
@@ -605,7 +617,8 @@ test_that("save_data_in_duckdb works", {
 fusen::inflate(
   flat_file = "dev/flat_create_database.Rmd", 
   vignette_name = NA, 
-  check = FALSE
+  check = FALSE, 
+  overwrite = TRUE
 )
 ```
 

@@ -8,7 +8,6 @@
 #' @param overwrite Boolean. If an existing table can be overwritten.
 #' 
 #' @importFrom DBI dbConnect dbWriteTable dbDisconnect
-#' @importFrom duckdb duckdb
 #' @importFrom here here
 #'
 #' @return Nothing. Used for side effect.
@@ -20,19 +19,30 @@
 #' dir.create(temp_directory)
 #'
 #' # Save data in the database
-#' save_data_in_duckdb(
+#' save_data_in_db(
 #'   table = iris,
 #'   name_table = "IRIS",
-#'   dbdir = file.path(temp_directory, "sensory_db.duckdb")
+#'   dbdir = file.path(temp_directory, "sensory_db.sqlite")
 #' )
-save_data_in_duckdb <- function(table, 
-                                name_table, 
-                                dbdir = here::here("inst", "database", "sensory_db.duckdb"),
-                                overwrite = FALSE){
+#'
+#' # Read data in the database
+#' con_db <- connect_db(
+#'   dbdir = file.path(temp_directory, "sensory_db.sqlite")
+#' )
+#'
+#' DBI::dbReadTable(
+#'   con_db, 
+#'   "IRIS"
+#' )
+#'
+#' DBI::dbDisconnect(con_db)
+save_data_in_db <- function(table, 
+                            name_table, 
+                            dbdir = here::here("inst", "database", "sensory_db.sqlite"),
+                            overwrite = FALSE){
   
   # Open the database (or create a new one if it does not exist)
-  con_db <- DBI::dbConnect(
-    duckdb::duckdb(),
+  con_db <- connect_db(
     dbdir = dbdir,
     read_only = FALSE
   )
