@@ -1,3 +1,3 @@
 globalVariables(
-  c("SCORE", "PRODUCT", "text_tooltip")
+  c("SCORE", "PRODUCT", "ATTRIBUTE", "text_tooltip")
 )
