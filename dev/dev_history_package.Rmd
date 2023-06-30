@@ -154,29 +154,13 @@ usethis::use_tidy_contributing()
 usethis::use_package_doc()
 ```
 
-### Add a css for the vignettes
+### Check
 
 ```{r}
-file.copy(system.file("templates/html/header_hide.html", package = "lozen"),
-          "vignettes")
-lozen::add_thinkr_css(path = "vignettes")
+attachment::att_amend_desc(
+  extra.suggests = c("dbplyr")
+)
 
-lozen::create_vignette_thinkr("aa-data-exploration")
-```
-
-### Description and Bibliography
-
-```{r}
-papillon::create_pkg_desc_file(out.dir = "inst", source = c("archive"), to = "html")
-lozen::create_pkg_biblio_file_thinkr()
-```
-
-## Tools to help to resolve issues
-
-```{r}
-# Get global variables
-checkhelper::print_globals()
-# Hexadecimal translation of an accent - if there are notes about non ASCII characters
-stringi::stri_trans_general("é", "hex")
+devtools::check()
 ```
 
