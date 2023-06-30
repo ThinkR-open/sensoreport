@@ -10,10 +10,16 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>/articles/a-query-the-database.html</loc>
   </url>
   <url>
-    <loc>/articles/query-the-database.html</loc>
+    <loc>/articles/b-perform-the-unidimensional-sensory-analysis.html</loc>
+  </url>
+  <url>
+    <loc>/articles/c-perform-the-multidimensional-sensory-analysis--mapping-.html</loc>
+  </url>
+  <url>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -28,10 +34,28 @@
     <loc>/reference/connect_db.html</loc>
   </url>
   <url>
+    <loc>/reference/data_hedonic_toy.html</loc>
+  </url>
+  <url>
+    <loc>/reference/data_products_toy.html</loc>
+  </url>
+  <url>
+    <loc>/reference/data_profiles_toy.html</loc>
+  </url>
+  <url>
+    <loc>/reference/data_sessions_toy.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/perform_senso_mapping.html</loc>
+  </url>
+  <url>
     <loc>/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_unidim_analysis.html</loc>
   </url>
   <url>
     <loc>/reference/run_app.html</loc>

@@ -2,6 +2,8 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  query-the-database: query-the-database.html
-last_built: 2023-06-30T10:31Z
+  a-query-the-database: a-query-the-database.html
+  b-perform-the-unidimensional-sensory-analysis: b-perform-the-unidimensional-sensory-analysis.html
+  c-perform-the-multidimensional-sensory-analysis--mapping-: c-perform-the-multidimensional-sensory-analysis--mapping-.html
+last_built: 2023-06-30T20:00Z
 
