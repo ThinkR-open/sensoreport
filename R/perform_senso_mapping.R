@@ -17,13 +17,13 @@
 #' data("data_profiles_toy")
 #' data("data_products_toy")
 #'
-#' plots_mapping <- perform_senso_mapping(
+#' res_mapping <- perform_senso_mapping(
 #'   data_profiles = data_profiles_toy,
 #'   data_products = data_products_toy
 #' )
 #'
-#' plots_mapping$inter_ind_plot # individuals (products) plot
-#' plots_mapping$inter_var_plot # variables (sensory attributes) plot
+#' res_mapping$inter_ind_plot # individuals (products) plot
+#' res_mapping$inter_var_plot # variables (sensory attributes) plot
 perform_senso_mapping <- function(data_profiles,
                                   data_products) {
   
@@ -185,6 +185,7 @@ perform_senso_mapping <- function(data_profiles,
 
   return(
     list(
+      res_pca = res_pca,
       inter_ind_plot = inter_ind_plot,
       inter_var_plot = inter_var_plot
     )

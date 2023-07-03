@@ -32,7 +32,6 @@ Imports:
     stringr,
     tidyr
 Suggests: 
-    dbplyr,
     knitr,
     rmarkdown,
     SensoMineR,

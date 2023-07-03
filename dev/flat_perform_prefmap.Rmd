@@ -1,0 +1,192 @@
+---
+title: "flat_perform_prefmap.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+library(tibble)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# `perform_prefmap()`: Perform the preference mapping
+
+```{r function-perform_prefmap}
+#' Perform the preference mapping
+#'
+#' @return 1
+#' @export
+#'
+#' @examples
+perform_prefmap <- function(res_mapping,
+                            data_hedonic,
+                            data_products, 
+                            color_min = "#EA485C",
+                            color_max = "#A9A9A9", 
+                            resolution = 200) {
+
+  # Find the ind coordinates
+  ## -- Find the products coordinates and take only the 2 first ones 
+  coord_prod <- as.data.frame(res_pca$ind$coord[, 1:2])
+  colnames(coord_prod) <- c("dim1", "dim2")
+  
+  # Create a grid to compute the surface response
+  ## -- Find the coordinates for the 2 first dimensions
+  vec_x1 <- coord_prod[, "dim1"]
+  vec_x2 <- coord_prod[, "dim2"]
+  
+  ## -- Get the interaction between 1st & 2nd coordinate
+  data_real <- tibble(
+    dim1 = vec_x1,
+    dim2 = vec_x2
+  ) %>% 
+    mutate(
+      dim1dim2 = scale(dim1, center = TRUE, scale = FALSE) * scale(dim2, center = TRUE, scale = FALSE)
+    )
+  
+  ## -- Get the coordinates for the grid (depending on resolution)
+  size_x1 <- diff(range(vec_x1))
+  size_x2 <- diff(range(vec_x2))
+  grid_by <- max(size_x1, size_x2) / resolution
+  vec_grid_x1 <- seq(
+    from = (min(vec_x1) - size_x1 * 0.05), 
+    to = (max(vec_x1) + size_x1 * 0.05), 
+    by = grid_by
+  ) 
+  vec_grid_x2 <- seq(
+    from = (min(vec_x2) - size_x2 * 0.05),
+    to = (max(vec_x2) + size_x2 * 0.05), 
+    by = grid_by
+  )
+  
+  ## -- Create the grid
+  data_grid <- expand.grid(
+    dim1 = vec_grid_x1, 
+    dim2 = vec_grid_x2
+  ) %>% 
+    mutate(
+      dim1dim2 = scale(dim1, center = TRUE, scale = FALSE) * scale(dim2, center = TRUE, scale = FALSE)
+    )
+
+  
+  
+}
+```
+
+```{r examples-perform_prefmap}
+
+res_pca = data_profiles_toy
+data_hedonic = data_hedonic_toy
+data_products = data_products_toy
+
+res_mapping <- perform_senso_mapping(
+  data_profiles = data_profiles_toy,
+  data_products = data_products_toy
+)
+
+
+
+```
+
+```{r tests-perform_prefmap}
+test_that("perform_prefmap works", {
+
+})
+```
+
+# `predict_nb_like()`: Predict the proportion of panelists who like a given fictive product
+    
+```{r function-predict_nb_like}
+#' Predict the proportion of panelists who like a given fictive product
+#' 
+#' @return
+predict_nb_like <- function(data_coord_real,
+                            data_grid,
+                            data_hedonic_large, 
+                            panelist_name){
+    
+  # Combine the real coordinates and the liking score
+  data_coord_real_liking <- tibble(
+    dim1 = data_coord_real$dim1,
+    dim2 = data_coord_real$dim2,
+    dim1dim2 = data_coord_real$dim1dim2,
+    liking_score = data_hedonic_large[[panelist_name]]
+  )
+
+  # Get the linear model to predict the liking score according to coordinates
+  mod_predict_liking <- lm(
+    formula = liking_score ~ dim1 + dim2 + dim1dim2, 
+    data = as.data.frame(data_coord_real_liking)
+  )
+
+  # Predict the liking score for each point of the fictive grid
+  predict_liking_grid <- predict.lm(
+    object = mod_predict_liking, 
+    newdata = data_grid, 
+    type = "response"
+  )
+  
+  # Find the mean of liking scores for the panelist
+  mean_liking_panelist <- mean(data_coord_real_liking$liking_score)
+  
+  # Define if the panelist like or not
+  # -- like = the predicted score is higher or = than the mean of the panelist
+  predict_liking_grid <- as.numeric(predict_liking_grid >= mean_liking_panelist)
+  # 0 means he/she does not like
+  # 1 means he/she likes
+  
+  # Return the matrix
+  res_grid_with_liking <- matrix(
+    predict_liking_grid,
+    nrow = nrow(data_grid), 
+    ncol = ncol(data_grid)
+  )
+  
+  return(res_grid_with_liking)
+
+}
+```
+  
+```{r example-predict_nb_like}
+data("data_grid_toy")
+data("data_hedonic_toy")
+data("data_coord_real_toy")
+
+data_coord_real = data_coord_real_toy
+data_grid = data_grid_toy
+data_hedonic = data_hedonic_toy
+panelist_name = "1"
+
+data_hedonic_large <- data_hedonic %>%
+  tidyr::pivot_wider(
+    names_from = CONSUMER,
+    values_from = SCORE
+  )
+
+```
+  
+```{r tests-predict_nb_like}
+test_that("predict_nb_like works", {
+  expect_true(inherits(predict_nb_like, "function")) 
+})
+```
+  
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_perform_prefmap.Rmd", 
+  vignette_name = "d - Perform the preference mapping",
+  check = FALSE,
+  overwrite = TRUE,
+  open_vignette = FALSE
+)
+```
+
