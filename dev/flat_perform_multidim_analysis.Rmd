@@ -16,10 +16,12 @@ library(FactoMineR)
 pkgload::load_all(export_all = FALSE)
 ```
 
-# `perform_senso_mapping()`: Tranform the sensory data to a large format and perform a PCA
+# `perform_senso_mapping()`: Transform the sensory data to a large format and perform a PCA
+
+With `perform_senso_mapping()`, you can perform the multidimensional analysis of sensory profiles. In practice, a Principal Component Analysis is realized. The graph of individuals (i.e. products) and the graph of variables (i.e. sensory attributes) are displayed in an interactive format.
 
 ```{r function-perform_senso_mapping}
-#' Tranform the sensory data to a large format and perform a PCA
+#' Transform the sensory data to a large format and perform a PCA
 #'
 #' @param data_profiles Tibble. Table with the sensory data.
 #' @param data_products Tibble. Table with the info about products.
@@ -36,6 +38,15 @@ pkgload::load_all(export_all = FALSE)
 perform_senso_mapping <- function(data_profiles,
                                   data_products, 
                                   ...) {
+  
+  # Check parameters
+  if (isFALSE(is.data.frame(data_profiles))) {
+    stop("The data 'data_profiles' you provided is not a dataframe.")
+  }
+  
+  if (isFALSE(is.data.frame(data_products))) {
+    stop("The data 'data_products' you provided is not a dataframe.")
+  }
   
   # Transform data to a PROD x ATTRIBUTE table
   data_large <- data_profiles |>
@@ -231,10 +242,24 @@ test_that("perform_senso_mapping works", {
   
   expect_true(inherits(plots_mapping$inter_ind_plot, "plotly"))
   expect_true(inherits(plots_mapping$inter_var_plot, "plotly"))
+  
+  # Test an error is the parameter is not a dataframe
+  expect_error(
+    object = perform_senso_mapping(
+      data_profiles = data_profiles_toy,
+      data_products = 1), 
+    regexp = "The data 'data_products' you provided is not a dataframe"
+  )
+  
+  expect_error(
+    object = perform_senso_mapping(
+      data_profiles = 1,
+      data_products = data_products_toy), 
+    regexp = "The data 'data_profiles' you provided is not a dataframe"
+  )
 
 })
 ```
-
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop

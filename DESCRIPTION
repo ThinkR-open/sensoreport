@@ -29,8 +29,10 @@ Imports:
     shiny,
     stats,
     stringr,
-    tidyr
+    tidyr,
+    tools
 Suggests: 
+    dbplyr,
     knitr,
     rmarkdown,
     SensoMineR,

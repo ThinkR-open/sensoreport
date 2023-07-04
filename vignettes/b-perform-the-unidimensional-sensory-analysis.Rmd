@@ -22,11 +22,14 @@ library(sensoreport)
 
 # `plot_unidim_analysis()`: Create the plot with the unidimensional analysis
 
+With `plot_unidim_analysis()`, you can create an interactive plot to visualize the intensity of the different sensory attributes in the products. The graph displays the products on the x-axis, and the average intensity on the y-axis (on a 0-10 scale). There are as many graphs as there are sensory attributes. The graph is interactive, so you can decide to display only certain products, for example. 
+
+
 ```{r examples-perform_unidim_analysis, out.width = '100%', out.height = '100%'}
 data("data_profiles_toy")
 
 plot_unidim_analysis(
-  data = data_profiles_toy
+  data_profiles = data_profiles_toy
 )
 ```
 

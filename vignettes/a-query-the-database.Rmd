@@ -22,6 +22,9 @@ library(sensoreport)
 
 # `connect_db()`: Connect to the sensory database
 
+With `connect_db()`, you can open a connection to query the sensory database. The database is stored in the package for demonstration purposes.
+
+
 ```{r examples-connect_db}
 con_db <- connect_db()
 

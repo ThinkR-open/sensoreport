@@ -2,7 +2,7 @@
 % Please edit documentation in R/perform_senso_mapping.R
 \name{perform_senso_mapping}
 \alias{perform_senso_mapping}
-\title{Tranform the sensory data to a large format and perform a PCA}
+\title{Transform the sensory data to a large format and perform a PCA}
 \usage{
 perform_senso_mapping(data_profiles, data_products, ...)
 }
@@ -17,7 +17,7 @@ perform_senso_mapping(data_profiles, data_products, ...)
 A list of 2 plotly graphs: the PCA ind plot and the PCA var plot
 }
 \description{
-Tranform the sensory data to a large format and perform a PCA
+Transform the sensory data to a large format and perform a PCA
 }
 \examples{
 data("data_profiles_toy")

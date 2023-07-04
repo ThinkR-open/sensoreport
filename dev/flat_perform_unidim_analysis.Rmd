@@ -16,10 +16,12 @@ pkgload::load_all(export_all = FALSE)
 
 # `plot_unidim_analysis()`: Create the plot with the unidimensional analysis
 
+With `plot_unidim_analysis()`, you can create an interactive plot to visualize the intensity of the different sensory attributes in the products. The graph displays the products on the x-axis, and the average intensity on the y-axis (on a 0-10 scale). There are as many graphs as there are sensory attributes. The graph is interactive, so you can decide to display only certain products, for example. 
+
 ```{r function-perform_unidim_analysis}
 #' Create the plot with the unidimensional analysis
 #' 
-#' @param data Tibble. The sensory data.
+#' @param data_profiles Tibble. The sensory data.
 #' 
 #' @importFrom ggplot2 ggplot aes geom_col labs facet_wrap theme_minimal theme element_blank
 #' @importFrom plotly ggplotly
@@ -27,10 +29,15 @@ pkgload::load_all(export_all = FALSE)
 #' 
 #' @return A ggplotly
 #' @export
-plot_unidim_analysis <- function(data) {
+plot_unidim_analysis <- function(data_profiles) {
+  
+  # Check parameters
+  if (isFALSE(is.data.frame(data_profiles))) {
+    stop("The data you provided is not a dataframe.")
+  }
   
   # Static plot
-  unidim_plot <- ggplot(data = data) +
+  unidim_plot <- ggplot(data = data_profiles) +
     aes(x = PRODUCT,
         y = SCORE,
         fill = PRODUCT) +
@@ -57,7 +64,7 @@ plot_unidim_analysis <- function(data) {
 data("data_profiles_toy")
 
 plot_unidim_analysis(
-  data = data_profiles_toy
+  data_profiles = data_profiles_toy
 )
 ```
 
@@ -67,14 +74,19 @@ test_that("perform_unidim_analysis works", {
   data("data_profiles_toy")
   
   my_unidim_plot <- plot_unidim_analysis(
-    data = data_profiles_toy
+    data_profiles = data_profiles_toy
   )
   
   expect_true(inherits(my_unidim_plot, "plotly"))
 
+  # Test an error is the parameter is not a dataframe
+  expect_error(
+    object = plot_unidim_analysis(data_profiles = 1), 
+    regexp = "The data you provided is not a dataframe"
+  )
+  
 })
 ```
-
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop

@@ -18,6 +18,16 @@ pkgload::load_all(export_all = FALSE)
 
 # `perform_prefmap()`: Perform the preference mapping
 
+With `perform_prefmap()`, you can perform the preference mapping.
+
+This is based on the results of the PCA provided by the `perform_senso_mapping()` function (see vignette *c - Perform the multidimensional sensory analysis (mapping)* for more details). 
+
+The graph of individuals (i.e. products) is discretized to form a grid of fictitious products. For each `x` * `y` coordinate of these fictitious products, the liking score is predicted for each panelist. A linear regression model `liking ~ coordinate dim 1 + coordinate dim 2 + coordinate dim 1 * coordinate dim 2` is used to predict the liking score for each panelist. 
+
+Then, the fictitious product is stamped "liked" if its predicted score is greater than or equal to the average of the liking scores given by the panelist. Otherwise, it is stamped "unliked". The proportion of panelists who liked each fictitious product in the grid is then calculated. This value is projected onto the map using a response surface.
+
+This graph is displayed in an interactive format.
+
 ```{r function-perform_prefmap}
 #' Perform the preference mapping
 #'
@@ -41,6 +51,31 @@ perform_prefmap <- function(res_mapping,
                             color_max = "#A9A9A9", 
                             resolution = 200) {
 
+  # Check parameters
+  if (isFALSE(inherits(res_mapping, "list"))) {
+    stop(
+      "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
+    )
+  } else {
+    if (any(names(res_mapping) != c("res_pca", "inter_ind_plot", "inter_var_plot"))) {
+      stop(
+        "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
+      )
+    } else {
+      if (isFALSE(inherits(res_mapping$res_pca, "PCA")) |
+          isFALSE(inherits(res_mapping$inter_ind_plot, "plotly")) |
+          isFALSE(inherits(res_mapping$inter_var_plot, "plotly"))) {
+        stop(
+          "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
+        )
+      }
+    }
+  }
+  
+  if (isFALSE(is.data.frame(data_hedonic))) {
+    stop("The data 'data_hedonic' you provided is not a dataframe.")
+  }
+  
   # Find the ind coordinates
   ## -- Find the products coordinates and take only the 2 first ones 
   coord_prod <- as.data.frame(res_pca$ind$coord[, 1:2])
@@ -84,7 +119,7 @@ perform_prefmap <- function(res_mapping,
       dim1dim2 = scale(dim1, center = TRUE, scale = FALSE) * scale(dim2, center = TRUE, scale = FALSE)
     )
 
-  # Get the proportion of panelists who like a given fictive product
+  # Get the proportion of panelists who like a given fictional product
   ## -- Tranform the hedonic dataset to a large dataset
   data_hedonic_large <- data_hedonic %>%
   pivot_wider(
@@ -92,8 +127,8 @@ perform_prefmap <- function(res_mapping,
     values_from = SCORE
   )
   
-  ## -- Predict if the panelists like a given fictive product of the grid
-  ## -- Get the proportion of panelists who like a given fictive product
+  ## -- Predict if the panelists like a given fictional product of the grid
+  ## -- Get the proportion of panelists who like a given fictional product
   vec_names_panelists <- data_hedonic %>% 
     distinct(CONSUMER) %>% 
     pull()
@@ -169,29 +204,62 @@ test_that("perform_prefmap works", {
   )
   
   plot_prefmap <- perform_prefmap(
-    res_mapping,
-    data_hedonic_toy
+    res_mapping = res_mapping,
+    data_hedonic = data_hedonic_toy
   )
   
   expect_true(inherits(plot_prefmap, "plotly"))
+  
+  # Test an error is the parameter is not a PCA result
+  expect_error(
+    object = perform_prefmap(
+      res_mapping = 1,
+      data_hedonic = data_hedonic_toy
+    ),
+    regexp = "Are you sure the parameter 'res_mapping'"
+  )
+  
+  expect_error(
+    object = perform_prefmap(
+      res_mapping = list(a = 1, b = 2, c = 3),
+      data_hedonic = data_hedonic_toy
+    ),
+    regexp = "Are you sure the parameter 'res_mapping'"
+  )
+  
+  expect_error(
+    object = perform_prefmap(
+      res_mapping = list(res_pca = 1, inter_ind_plot = 2, inter_var_plot = 3),
+      data_hedonic = data_hedonic_toy
+    ),
+    regexp = "Are you sure the parameter 'res_mapping'"
+  )
+  
+  # Test an error is the parameter is not a dataframe
+  expect_error(
+    object = perform_prefmap(
+      res_mapping = res_mapping,
+      data_hedonic = 1), 
+    regexp = "The data 'data_hedonic' you provided is not a dataframe"
+  )
 
 })
 ```
 
-# `predict_like()`: Predict if a given panelist likes a given fictive product or not
+<!--# `predict_like()`: Predict if a given panelist likes a given fictional product or not-->
     
 ```{r function-predict_like}
-#' Predict if a given panelist likes a given fictive product or not
+#' Predict if a given panelist likes a given fictional product or not
 #' 
 #' @param data_coord_real Dataframe. Table with coordinates of real products.
-#' @param data_grid Dataframe. Table with coordinates of fictive products (grid).
+#' @param data_grid Dataframe. Table with coordinates of fictional products (grid).
 #' @param data_hedonic_large Dataframe. Table with hedonic data.
 #' @param panelist_name Character. Name of the panelist.
 #'
 #' @importForm tibble tibble
 #' @importFrom stats lm predict.lm
 #' 
-#' @return A table with the coordinates of the fictive products. A 0 if the panelist does not like it, a 1 otherwise.
+#' @return A table with the coordinates of the fictional products. A 0 if the panelist does not like it, a 1 otherwise.
 predict_like <- function(data_coord_real,
                          data_grid,
                          data_hedonic_large, 
@@ -211,7 +279,7 @@ predict_like <- function(data_coord_real,
     data = as.data.frame(data_coord_real_liking)
   )
 
-  # Predict the liking score for each point of the fictive grid
+  # Predict the liking score for each point of the fictional grid
   predict_liking_grid <- predict.lm(
     object = mod_predict_liking, 
     newdata = data_grid, 
