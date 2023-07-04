@@ -23,7 +23,6 @@ Imports:
     glue,
     golem,
     here,
-    magrittr,
     plotly,
     purrr,
     RSQLite,

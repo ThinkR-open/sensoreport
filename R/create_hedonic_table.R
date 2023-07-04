@@ -14,7 +14,7 @@
 #' for (i in 1:6) {
 #'   list_hedonic_data[[i]] <- create_toy_data(
 #'     data = hedo.cocktail
-#'     ) %>% 
+#'     ) |> 
 #'     mutate(SESSION = paste0("SESS230", i))
 #' }
 #'
@@ -23,14 +23,14 @@
 #' )
 create_hedonic_table <- function(list_data){
   
-  hedonic_table <- list_data %>%
+  hedonic_table <- list_data |>
     map(
-      ~ .x %>%
-        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) %>%
-        pivot_longer(cols = -c(PRODUCT, SESSION)) %>%
+      ~ .x |>
+        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) |>
+        pivot_longer(cols = -c(PRODUCT, SESSION)) |>
         rename(CONSUMER = name,
                SCORE = value)
-    ) %>% 
+    ) |> 
     bind_rows()
     
   return(hedonic_table)

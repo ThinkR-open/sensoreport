@@ -2,9 +2,9 @@
 
 con_db <- connect_db()
 
-data_profiles_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PROFILES")) %>%
-  dplyr::filter(SESSION == "SESS2301" & PRODUCT %in% c("PROD1", "PROD2", "PROD3", "PROD4")) %>%
-  dplyr::select(-SESSION) %>%
+data_profiles_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PROFILES")) |>
+  dplyr::filter(SESSION == "SESS2301" & PRODUCT %in% c("PROD1", "PROD2", "PROD3", "PROD4")) |>
+  dplyr::select(-SESSION) |>
   dplyr::collect()
 
 DBI::dbDisconnect(con_db, shutdown = TRUE)
@@ -22,9 +22,9 @@ checkhelper::use_data_doc(
 
 con_db <- connect_db()
 
-data_hedonic_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM HEDONIC")) %>%
-  dplyr::filter(SESSION == "SESS2301" & PRODUCT %in% c("PROD1", "PROD2", "PROD3", "PROD4")) %>%
-  dplyr::select(-SESSION) %>%
+data_hedonic_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM HEDONIC")) |>
+  dplyr::filter(SESSION == "SESS2301" & PRODUCT %in% c("PROD1", "PROD2", "PROD3", "PROD4")) |>
+  dplyr::select(-SESSION) |>
   dplyr::collect()
 
 DBI::dbDisconnect(con_db, shutdown = TRUE)
@@ -42,7 +42,7 @@ checkhelper::use_data_doc(
 
 con_db <- connect_db()
 
-data_sessions_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM SESSIONS")) %>%
+data_sessions_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM SESSIONS")) |>
   dplyr::collect()
 
 DBI::dbDisconnect(con_db, shutdown = TRUE)
@@ -60,7 +60,7 @@ checkhelper::use_data_doc(
 
 con_db <- connect_db()
 
-data_products_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PRODUCTS")) %>%
+data_products_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PRODUCTS")) |>
   dplyr::collect()
 
 DBI::dbDisconnect(con_db, shutdown = TRUE)
@@ -91,7 +91,7 @@ vec_x2 <- coord_prod[, "dim2"]
 data_coord_real_toy <- tibble(
   dim1 = vec_x1,
   dim2 = vec_x2
-) %>%
+) |>
   mutate(
     dim1dim2 = scale(dim1, center = TRUE, scale = FALSE) * scale(dim2, center = TRUE, scale = FALSE)
   )
@@ -124,7 +124,7 @@ vec_grid_x2 <- seq(
 data_grid_toy <- expand.grid(
   dim1 = vec_grid_x1,
   dim2 = vec_grid_x2
-) %>%
+) |>
   mutate(
     dim1dim2 = scale(dim1, center = TRUE, scale = FALSE) * scale(dim2, center = TRUE, scale = FALSE)
   )

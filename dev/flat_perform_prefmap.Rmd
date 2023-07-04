@@ -8,6 +8,7 @@ editor_options:
 ```{r development, include=FALSE}
 library(testthat)
 library(tibble)
+library(purrr)
 ```
 
 ```{r development-load}
@@ -20,13 +21,22 @@ pkgload::load_all(export_all = FALSE)
 ```{r function-perform_prefmap}
 #' Perform the preference mapping
 #'
-#' @return 1
-#' @export
+#' @param res_mapping List. Result of the perform_senso_mapping() function.
+#' @param data_hedonic Dataframe. Hedonic data.
+#' @param color_min Character. Color for "do not like".
+#' @param color_max Character. Color for "like".
+#' @param resolution Integer. Resolution for the interactive plot.
+#' 
+#' @importFrom tibble tibble
+#' @importFrom tidyr pivot_wider
+#' @importFrom purrr map reduce
+#' @importFrom grDevices colorRampPalette
+#' @importFrom plotly add_trace
 #'
-#' @examples
+#' @return A plotly preference mapping plot
+#' @export
 perform_prefmap <- function(res_mapping,
                             data_hedonic,
-                            data_products, 
                             color_min = "#EA485C",
                             color_max = "#A9A9A9", 
                             resolution = 200) {
@@ -42,7 +52,7 @@ perform_prefmap <- function(res_mapping,
   vec_x2 <- coord_prod[, "dim2"]
   
   ## -- Get the interaction between 1st & 2nd coordinate
-  data_real <- tibble(
+  data_coord_real <- tibble(
     dim1 = vec_x1,
     dim2 = vec_x2
   ) %>% 
@@ -74,42 +84,118 @@ perform_prefmap <- function(res_mapping,
       dim1dim2 = scale(dim1, center = TRUE, scale = FALSE) * scale(dim2, center = TRUE, scale = FALSE)
     )
 
+  # Get the proportion of panelists who like a given fictive product
+  ## -- Tranform the hedonic dataset to a large dataset
+  data_hedonic_large <- data_hedonic %>%
+  pivot_wider(
+    names_from = CONSUMER,
+    values_from = SCORE
+  )
   
+  ## -- Predict if the panelists like a given fictive product of the grid
+  ## -- Get the proportion of panelists who like a given fictive product
+  vec_names_panelists <- data_hedonic %>% 
+    distinct(CONSUMER) %>% 
+    pull()
+  
+  prop_predict_like_grid <- vec_names_panelists %>%
+    map(
+      ~ predict_like(
+          data_coord_real = data_coord_real,
+          data_grid = data_grid,
+          data_hedonic_large = data_hedonic_large,
+          panelist_name = .x
+      )
+    ) |>  
+    reduce(`+`) / length(vec_names_panelists) * 100
+  
+  data_surface_response <- tibble(
+    dim1 = data_grid$dim1, 
+    dim2 = data_grid$dim2,
+    prop_predict_like = as.vector(prop_predict_like_grid)
+  )
+  
+  # Plot the preference mapping
+  ## -- Get the colors palette
+  vec_colors_min <- colorRampPalette(c(color_min, "white"))(49)
+  vec_colors_max <- colorRampPalette(c("white", color_max))(50)
+  colors_palette <- c(
+    vec_colors_min,
+    vec_colors_max
+  )
+  
+  ## -- Add the surface response to the individual plot
+  inter_plot_prefmap <- res_mapping$inter_ind_plot |> 
+    add_trace(data = data_surface_response,
+              x = ~ dim1,
+              y = ~ dim2,
+              z = ~ prop_predict_like,
+              type = "contour",
+              contours = list(showlabels = TRUE, start = 0, end = 100, coloring = "heatmap"),
+              colorscale = colors_palette,
+              hoverinfo = "none",
+              hoverlabel = list(bgcolor = "black", font = list(color = "white")),
+              colorbar = list(len = 1,
+                              lenmode = "fraction",
+                              title = "% of panelists who like the product"))
+  
+  return(inter_plot_prefmap)
   
 }
 ```
 
 ```{r examples-perform_prefmap}
-
-res_pca = data_profiles_toy
-data_hedonic = data_hedonic_toy
-data_products = data_products_toy
+data("data_hedonic_toy")
 
 res_mapping <- perform_senso_mapping(
   data_profiles = data_profiles_toy,
   data_products = data_products_toy
 )
 
-
-
+perform_prefmap(
+  res_mapping,
+  data_hedonic_toy
+)
 ```
 
 ```{r tests-perform_prefmap}
 test_that("perform_prefmap works", {
 
+  data("data_hedonic_toy")
+  
+  res_mapping <- perform_senso_mapping(
+    data_profiles = data_profiles_toy,
+    data_products = data_products_toy
+  )
+  
+  plot_prefmap <- perform_prefmap(
+    res_mapping,
+    data_hedonic_toy
+  )
+  
+  expect_true(inherits(plot_prefmap, "plotly"))
+
 })
 ```
 
-# `predict_nb_like()`: Predict the proportion of panelists who like a given fictive product
+# `predict_like()`: Predict if a given panelist likes a given fictive product or not
     
-```{r function-predict_nb_like}
-#' Predict the proportion of panelists who like a given fictive product
+```{r function-predict_like}
+#' Predict if a given panelist likes a given fictive product or not
 #' 
-#' @return
-predict_nb_like <- function(data_coord_real,
-                            data_grid,
-                            data_hedonic_large, 
-                            panelist_name){
+#' @param data_coord_real Dataframe. Table with coordinates of real products.
+#' @param data_grid Dataframe. Table with coordinates of fictive products (grid).
+#' @param data_hedonic_large Dataframe. Table with hedonic data.
+#' @param panelist_name Character. Name of the panelist.
+#'
+#' @importForm tibble tibble
+#' @importFrom stats lm predict.lm
+#' 
+#' @return A table with the coordinates of the fictive products. A 0 if the panelist does not like it, a 1 otherwise.
+predict_like <- function(data_coord_real,
+                         data_grid,
+                         data_hedonic_large, 
+                         panelist_name){
     
   # Combine the real coordinates and the liking score
   data_coord_real_liking <- tibble(
@@ -144,8 +230,8 @@ predict_nb_like <- function(data_coord_real,
   # Return the matrix
   res_grid_with_liking <- matrix(
     predict_liking_grid,
-    nrow = nrow(data_grid), 
-    ncol = ncol(data_grid)
+    nrow = length(unique(data_grid$dim1)), 
+    ncol = length(unique(data_grid$dim2))
   )
   
   return(res_grid_with_liking)
@@ -153,27 +239,273 @@ predict_nb_like <- function(data_coord_real,
 }
 ```
   
-```{r example-predict_nb_like}
+```{r example-predict_like}
 data("data_grid_toy")
 data("data_hedonic_toy")
 data("data_coord_real_toy")
 
-data_coord_real = data_coord_real_toy
-data_grid = data_grid_toy
-data_hedonic = data_hedonic_toy
-panelist_name = "1"
-
-data_hedonic_large <- data_hedonic %>%
+data_hedonic_large_toy <- data_hedonic_toy %>%
   tidyr::pivot_wider(
     names_from = CONSUMER,
     values_from = SCORE
   )
 
+predict_like(
+  data_coord_real = data_coord_real_toy,
+  data_grid = data_grid_toy,
+  data_hedonic_large = data_hedonic_large_toy,
+  panelist_name = "1"
+)
 ```
   
-```{r tests-predict_nb_like}
-test_that("predict_nb_like works", {
-  expect_true(inherits(predict_nb_like, "function")) 
+```{r tests-predict_like}
+test_that("predict_like works", {
+  
+  data("data_grid_toy")
+  data("data_hedonic_toy")
+  data("data_coord_real_toy")
+  
+  data_hedonic_large_toy <- data_hedonic_toy %>%
+    tidyr::pivot_wider(names_from = CONSUMER,
+                       values_from = SCORE)
+  
+  # Unit test - panelist 1
+  res_predict_like_panelist1 <- predict_like(
+    data_coord_real = data_coord_real_toy,
+    data_grid = data_grid_toy,
+    data_hedonic_large = data_hedonic_large_toy,
+    panelist_name = "1"
+  )
+
+  # long dput ----
+  expect_equal(object = res_predict_like_panelist1[1:10, 1:10],
+               expected = structure(
+                 c(
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0
+                 ),
+                 dim = c(10L,
+                         10L)
+               ))
+  # end of long dput ----
+  
+  # Unit test - panelist 27
+  res_predict_like_panelist27 <- predict_like(
+    data_coord_real = data_coord_real_toy,
+    data_grid = data_grid_toy,
+    data_hedonic_large = data_hedonic_large_toy,
+    panelist_name = "27"
+  )
+  
+  # long dput ----
+  expect_equal(object = res_predict_like_panelist27[1:10, 1:10],
+               expected = structure(
+                 c(
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0
+                 ),
+                 dim = c(10L,
+                         10L)
+               ))
+
+  # end of long dput ----
+
 })
 ```
   

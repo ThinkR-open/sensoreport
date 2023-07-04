@@ -4,6 +4,7 @@
 #'
 #' @param data_profiles Tibble. Table with the sensory data.
 #' @param data_products Tibble. Table with the info about products.
+#' @param ... Other parameters of the FactoMineR::PCA() function.
 #'
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr arrange filter mutate pull
@@ -25,14 +26,15 @@
 #' res_mapping$inter_ind_plot # individuals (products) plot
 #' res_mapping$inter_var_plot # variables (sensory attributes) plot
 perform_senso_mapping <- function(data_profiles,
-                                  data_products) {
+                                  data_products, 
+                                  ...) {
   
   # Transform data to a PROD x ATTRIBUTE table
-  data_large <- data_profiles %>%
+  data_large <- data_profiles |>
     pivot_wider(
       names_from = "ATTRIBUTE", 
       values_from = "SCORE"
-    ) %>% 
+    ) |> 
     arrange(PRODUCT)
     
   # Transform to dataframe and add rownames
@@ -43,7 +45,8 @@ perform_senso_mapping <- function(data_profiles,
   # Perform PCA
   res_pca <- PCA(
     X = data_large, 
-    graph = FALSE
+    graph = FALSE, 
+    ...
   )
   
   # Plot the products map
@@ -52,14 +55,14 @@ perform_senso_mapping <- function(data_profiles,
   colnames(coord_prod) <- c("dim1", "dim2")
   
   ## -- Extra info about products
-  vec_info <- data_products %>% 
-    filter(PRODUCT %in% rownames(data_large)) %>% 
-    arrange(PRODUCT) %>% 
-    mutate(text_tooltip = glue("Product {PRODUCT}<br>{INFO}<br>{BRAND}")) %>% 
+  vec_info <- data_products |> 
+    filter(PRODUCT %in% rownames(data_large)) |> 
+    arrange(PRODUCT) |> 
+    mutate(text_tooltip = glue("Product {PRODUCT}<br>{INFO}<br>{BRAND}")) |> 
     pull(text_tooltip)
   
   ## -- Plot
-  inter_ind_plot <- plot_ly(data = coord_prod) %>%
+  inter_ind_plot <- plot_ly(data = coord_prod) |>
     add_trace(
       x = ~ dim1 ,
       y = ~ dim2,
@@ -69,7 +72,7 @@ perform_senso_mapping <- function(data_profiles,
       mode = "markers",
       marker = list(size = 6, color = "orange"),
       showlegend = TRUE
-    ) %>%
+    ) |>
     layout(
       legend = list(
         orientation = "h",
@@ -114,7 +117,7 @@ perform_senso_mapping <- function(data_profiles,
   coord_attr[, "attribute"] <- rownames(coord_attr)
   
   ## -- Plot
-  inter_var_plot <- plot_ly() %>%
+  inter_var_plot <- plot_ly() |>
         add_trace(
           data = coord_attr,
           x = ~ dim1 ,
@@ -124,7 +127,7 @@ perform_senso_mapping <- function(data_profiles,
           # text = text.tooltip,
           type = "scatter", mode = "markers",
           marker = list(size = 6, color = "white"),
-          showlegend = TRUE) %>%
+          showlegend = TRUE) |>
         add_annotations(
           data = coord_attr,
           axref = "x", 
@@ -136,7 +139,7 @@ perform_senso_mapping <- function(data_profiles,
           aref = "y", 
           y = 0,
           text = coord_attr$attribute, 
-          arrowhead = 0, arrowcolor = "black") %>%
+          arrowhead = 0, arrowcolor = "black") |>
     layout(
       shapes = list(
         list(type = "circle",

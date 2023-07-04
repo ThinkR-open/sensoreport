@@ -33,7 +33,7 @@ list_profiles_data <- list()
 for (i in 1:6) {
   list_profiles_data[[i]] <- create_toy_data(
     data = senso.cocktail
-    ) %>% 
+    ) |> 
     mutate(SESSION = paste0("SESS230", i))
 }
 
@@ -54,7 +54,7 @@ list_hedonic_data <- list()
 for (i in 1:6) {
   list_hedonic_data[[i]] <- create_toy_data(
     data = hedo.cocktail
-    ) %>% 
+    ) |> 
     mutate(SESSION = paste0("SESS230", i))
 }
 
@@ -90,7 +90,7 @@ save_data_in_db(
 # 4 - Create the table with infos about products
 
 products_table <- tibble(
-  PRODUCT = hedonic_table %>% distinct(PRODUCT) %>% pull(),
+  PRODUCT = hedonic_table |> distinct(PRODUCT) |> pull(),
   INFO = rep("Lorem ipsum dolor sit amet", 16),
   BRAND = rep(c("Brand A", "Brand B", "Brand C", "Brand D"), 
               4)
@@ -303,18 +303,18 @@ test_that("create_toy_data works", {
 #' @return Tibble. The toy sensory profiles table, in a long format.
 create_profiles_table <- function(list_data){
   
-  profiles_table <- list_data %>%
+  profiles_table <- list_data |>
     map(
-      ~ .x %>%
-        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) %>%
-        pivot_longer(cols = -c(PRODUCT, SESSION)) %>%
+      ~ .x |>
+        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) |>
+        pivot_longer(cols = -c(PRODUCT, SESSION)) |>
         rename(ATTRIBUTE = name,
-               SCORE = value) %>%
+               SCORE = value) |>
         mutate(
           ATTRIBUTE = str_replace_all(ATTRIBUTE, "\\.", " "),
           ATTRIBUTE = str_to_title(ATTRIBUTE)
         )
-    ) %>% 
+    ) |> 
     bind_rows()
     
   return(profiles_table)
@@ -328,7 +328,7 @@ list_profiles_data <- list()
 for (i in 1:6) {
   list_profiles_data[[i]] <- create_toy_data(
     data = senso.cocktail
-    ) %>% 
+    ) |> 
     mutate(SESSION = paste0("SESS230", i))
 }
 
@@ -345,7 +345,7 @@ test_that("create_toy_data works", {
     list_profiles_data <- list()
     
     for (i in 1:6) {
-      list_profiles_data[[i]] <- create_toy_data(data = senso.cocktail) %>%
+      list_profiles_data[[i]] <- create_toy_data(data = senso.cocktail) |>
         mutate(SESSION = paste0("SESS230", i))
     }
     
@@ -423,14 +423,14 @@ test_that("create_toy_data works", {
 #' @return Tibble. The toy sensory profiles table, in a long format.
 create_hedonic_table <- function(list_data){
   
-  hedonic_table <- list_data %>%
+  hedonic_table <- list_data |>
     map(
-      ~ .x %>%
-        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) %>%
-        pivot_longer(cols = -c(PRODUCT, SESSION)) %>%
+      ~ .x |>
+        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) |>
+        pivot_longer(cols = -c(PRODUCT, SESSION)) |>
         rename(CONSUMER = name,
                SCORE = value)
-    ) %>% 
+    ) |> 
     bind_rows()
     
   return(hedonic_table)
@@ -444,7 +444,7 @@ list_hedonic_data <- list()
 for (i in 1:6) {
   list_hedonic_data[[i]] <- create_toy_data(
     data = hedo.cocktail
-    ) %>% 
+    ) |> 
     mutate(SESSION = paste0("SESS230", i))
 }
 
@@ -461,7 +461,7 @@ test_that("create_toy_data works", {
     list_profiles_data <- list()
     
     for (i in 1:6) {
-      list_profiles_data[[i]] <- create_toy_data(data = senso.cocktail) %>%
+      list_profiles_data[[i]] <- create_toy_data(data = senso.cocktail) |>
         mutate(SESSION = paste0("SESS230", i))
     }
     

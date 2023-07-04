@@ -7,7 +7,7 @@ test_that("create_toy_data works", {
     list_profiles_data <- list()
     
     for (i in 1:6) {
-      list_profiles_data[[i]] <- create_toy_data(data = senso.cocktail) %>%
+      list_profiles_data[[i]] <- create_toy_data(data = senso.cocktail) |>
         mutate(SESSION = paste0("SESS230", i))
     }
     
