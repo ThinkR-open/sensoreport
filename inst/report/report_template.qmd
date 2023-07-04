@@ -19,6 +19,7 @@ products <- c("PROD1", "PROD2", "PROD3", "PROD4",
 #| include: false
 # library(sensoreport)
 pkgload::load_all()
+library(dplyr)
 ```
 
 ```{r}
@@ -67,17 +68,17 @@ nb_consumers <- data_hedonic |>
   pull()
 ```
 
-|                                  |    |                             |
-|:---------------------------------|----|:----------------------------|
-|  Session ID: `r session`         |    | Session date: `r date`      |
-|  Country: `r country`            |    | Study sponsor: `r sponsor`  | 
-|  Report date: `r Sys.Date()`     |    | Report author: `r author`   | 
+|                             |     |                            |
+|:----------------------------|-----|:---------------------------|
+| Session ID: `r session`     |     | Session date: `r date`     |
+| Country: `r country`        |     | Study sponsor: `r sponsor` |
+| Report date: `r Sys.Date()` |     | Report author: `r author`  |
 
 General information about the study:
 
-- **Number of products**: `r nb_products`
-- **Number of sensory attributes**: `r nb_attributes`
-- **Number of consumers who provided liking data**: `r nb_consumers`
+-   **Number of products**: `r nb_products`
+-   **Number of sensory attributes**: `r nb_attributes`
+-   **Number of consumers who provided liking data**: `r nb_consumers`
 
 ## Products
 
@@ -110,35 +111,41 @@ Nunc sit amet nisi ut libero posuere vestibulum. Nullam rhoncus mauris et eros c
 
 ```{r}
 #| include: false
-plots_mapping <- perform_senso_mapping(
+res_mapping <- perform_senso_mapping(
     data_profiles = data_profiles,
     data_products = data_products
   )
 ```
 
-:::: {.columns}
-
+::: columns
 ::: {.column width="40%"}
 ```{r}
 #| echo: false
-plots_mapping$inter_ind_plot
+res_mapping$inter_ind_plot
 ```
 :::
 
 ::: {.column width="60%"}
 ```{r}
 #| echo: false
-plots_mapping$inter_var_plot
+res_mapping$inter_var_plot
 ```
 :::
-
-::::
+:::
 
 ## Preference mapping
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in eleifend enim, ut faucibus odio. Nunc non magna non diam lacinia aliquet. Aliquam id semper urna, in aliquet magna. Duis cursus posuere diam, sit amet dignissim felis placerat sed. Pellentesque ut tempus nibh. Nunc ac elementum dolor. Interdum et malesuada fames ac ante ipsum primis in faucibus.
 
 Nunc sit amet nisi ut libero posuere vestibulum. Nullam rhoncus mauris et eros congue condimentum. Aenean nibh dolor, luctus gravida bibendum eget, fringilla vitae diam. Suspendisse ullamcorper tortor eget felis fringilla, quis laoreet metus gravida. Curabitur sed nulla mattis, interdum lacus condimentum, sodales tortor. Nunc pellentesque vitae sem pharetra efficitur. Aliquam nec est non odio varius mattis. Ut auctor nisi eget posuere tempor. Sed a facilisis tellus, eget tincidunt arcu.
+
+```{r}
+#| echo: false
+perform_prefmap(
+  res_mapping = res_mapping,
+  data_hedonic = data_hedonic
+)
+```
 
 ## Explore the raw data
 

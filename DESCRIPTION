@@ -22,6 +22,7 @@ Imports:
     ggplot2,
     glue,
     golem,
+    grDevices,
     here,
     plotly,
     purrr,
@@ -29,6 +30,7 @@ Imports:
     shiny,
     stats,
     stringr,
+    tibble,
     tidyr,
     tools
 Suggests: 

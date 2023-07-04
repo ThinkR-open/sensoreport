@@ -32,6 +32,23 @@ flat_perform_multidim_analysis.Rmd:
     check: false
     document: true
     overwrite: 'yes'
+flat_perform_prefmap.Rmd:
+  path: dev/flat_perform_prefmap.Rmd
+  state: active
+  R:
+  - R/perform_prefmap.R
+  - R/predict_like.R
+  tests:
+  - tests/testthat/test-perform_prefmap.R
+  - tests/testthat/test-predict_like.R
+  vignettes: vignettes/d-perform-the-preference-mapping.Rmd
+  inflate:
+    flat_file: dev/flat_perform_prefmap.Rmd
+    vignette_name: d - Perform the preference mapping
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
 flat_perform_unidim_analysis.Rmd:
   path: dev/flat_perform_unidim_analysis.Rmd
   state: active
