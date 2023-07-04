@@ -53,7 +53,7 @@ perform_prefmap(
 
   
 
-```{r example-predict_like}
+```{r example-predict_like, eval = FALSE, echo = FALSE}
 data("data_grid_toy")
 data("data_hedonic_toy")
 data("data_coord_real_toy")

@@ -7,7 +7,7 @@
 #' @param data_hedonic_large Dataframe. Table with hedonic data.
 #' @param panelist_name Character. Name of the panelist.
 #'
-#' @importForm tibble tibble
+#' @importFrom tibble tibble
 #' @importFrom stats lm predict.lm
 #' 
 #' @return A table with the coordinates of the fictional products. A 0 if the panelist does not like it, a 1 otherwise.
