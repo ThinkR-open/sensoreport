@@ -1,9 +1,9 @@
 ---
-title: "Sensory/consumer analysis report"
+title: ""
 format:
   html:
     toc: true
-    toc-location: left
+    toc-location: right
     theme: cerulean
     code-fold: true
     embed-resources: true
