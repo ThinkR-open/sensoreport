@@ -1,0 +1,148 @@
+---
+title: "flat_create_report.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+library(stringr)
+library(usethis)
+library(quarto)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# `create_report()`: Create the reproducible HTML sensory report
+
+```{r function-create_report}
+#' Create the reproducible HTML sensory report
+#'
+#' @importFrom withr with_dir
+#' @importFrom quarto quarto_render
+#' @importFrom stringr str_remove_all
+#' 
+#' @return A list with the folder and the file of the created report.
+#' 
+#' @export
+create_report <- function(author,
+                          session,
+                          products,
+                          output_dir,
+                          report_template = app_sys("report", "report_template.qmd")) {
+  
+  # Create the list of parameters
+  list_param_report <- list(
+    author = author,
+    session = session,
+    products = products
+  )
+  
+  # Get the name of the html file
+  output_report <- paste0(
+    str_remove_all(Sys.time(), "-|:| |UTC"), 
+    "-sensory_report.html"
+  )
+  
+  # Move the .qmd template into the temp directory
+  file.copy(
+    from = report_template,
+    to = output_dir
+  )
+
+  # Render the report
+  with_dir(
+    output_dir,{
+      quarto_render(
+        input = basename(report_template),
+        execute_params = list_param_report,
+        output_file = output_report,
+        quiet = TRUE
+      )
+  })
+  
+  return(
+    list(
+      output_dir_report = output_dir,
+      output_file_report = output_report
+    )
+  )
+  
+}
+```
+
+```{r examples-create_report}
+# Create a temporary directory
+my_temp_dir <- tempfile()
+dir.create(my_temp_dir)
+
+# Create the sensory report
+res_info_report <- create_report(
+  author = "Swann",
+  session = "SESS2301",
+  products = c("PROD1", "PROD2", 
+               "PROD3", "PROD4", 
+               "PROD5", "PROD6"),
+  output_dir = my_temp_dir
+)
+
+# Open the sensory report
+browseURL(
+  file.path(
+    res_info_report$output_dir_report, 
+    res_info_report$output_file_report
+  )
+)
+
+# Delete temporary directory
+unlink(my_temp_dir, recursive = TRUE)
+```
+
+```{r tests-create_report}
+test_that("create_report works", {
+  
+  # Create temporary directory
+  my_temp_dir <- tempfile()
+  dir.create(my_temp_dir)
+  
+  # Create the sensory report
+  res_info_report <- create_report(
+    author = "Swann",
+    session = "SESS2301",
+    products = c("PROD1", "PROD2",
+                 "PROD3", "PROD4",
+                 "PROD5", "PROD6"),
+    output_dir = my_temp_dir
+  )
+  
+  # Check if the file exists
+  expect_true(file.exists(
+    file.path(
+      res_info_report$output_dir_report,
+      res_info_report$output_file_report
+    )
+  ))
+  
+  # Delete temporary directory
+  unlink(my_temp_dir, recursive = TRUE)
+
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_create_report.Rmd", 
+  vignette_name = "e - Create the sensory report",
+  check = FALSE,
+  overwrite = TRUE,
+  open_vignette = FALSE
+)
+```
+
