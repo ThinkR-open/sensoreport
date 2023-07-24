@@ -8,7 +8,7 @@ perform_prefmap(
   res_mapping,
   data_hedonic,
   color_min = "white",
-  color_max = "#54A2E1",
+  color_max = "#55B4D2",
   resolution = 200
 )
 }

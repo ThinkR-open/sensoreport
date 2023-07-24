@@ -59,7 +59,7 @@ sensoryreport_theme <- function() {
   bs_theme(
     version = 5,
     primary = "#7f7f7f",
-    secondary = "#54A2E1"
+    secondary = "#55B4D2"
   ) |>
     bs_add_rules(
       sass_file(app_sys("app", "www", "custom.sass"))

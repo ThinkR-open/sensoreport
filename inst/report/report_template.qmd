@@ -1,10 +1,15 @@
 ---
-title: ""
+title: "Sensory report"
+subtitle: "This is a toy report, generated with the R package {sensoreport}"
+description: "https://github.com/ThinkR-open/sensoreport"
+title-block-banner: "#55B4D2"
 format:
   html:
     toc: true
     toc-location: right
-    theme: cerulean
+    theme: 
+      - cerulean
+      - custom.scss
     code-fold: true
     embed-resources: true
 params:
@@ -162,8 +167,8 @@ perform_prefmap(
 
 ```{r}
 #| echo: false
-data_profiles |> 
-  mutate(SCORE = round(SCORE, 1)) |> 
+data_profiles |>
+  mutate(SCORE = round(SCORE, 1)) |>
   DT::datatable()
 ```
 
@@ -171,8 +176,8 @@ data_profiles |>
 
 ```{r}
 #| echo: false
-data_hedonic |> 
-  mutate(SCORE = round(SCORE, 1)) |> 
+data_hedonic |>
+  mutate(SCORE = round(SCORE, 1)) |>
   DT::datatable()
 ```
 
