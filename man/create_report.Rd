@@ -12,6 +12,17 @@ create_report(
   report_template = app_sys("report", "report_template.qmd")
 )
 }
+\arguments{
+\item{author}{Character. Author of the report.}
+
+\item{session}{Character. ID of the sensory session.}
+
+\item{products}{Character. Vector of products to include into the report.}
+
+\item{output_dir}{Character. Path of the folder to save the report.}
+
+\item{report_template}{Character. Path of the qmd report template.}
+}
 \value{
 A list with the folder and the file of the created report.
 }

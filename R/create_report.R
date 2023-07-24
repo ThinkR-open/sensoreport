@@ -2,6 +2,12 @@
 
 #' Create the reproducible HTML sensory report
 #'
+#' @param author Character. Author of the report.
+#' @param session Character. ID of the sensory session.
+#' @param products Character. Vector of products to include into the report.
+#' @param output_dir Character. Path of the folder to save the report.
+#' @param report_template Character. Path of the qmd report template.
+#' 
 #' @importFrom withr with_dir
 #' @importFrom quarto quarto_render
 #' @importFrom stringr str_remove_all

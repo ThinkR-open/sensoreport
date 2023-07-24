@@ -136,7 +136,7 @@ perform_prefmap <- function(res_mapping,
   
   prop_predict_like_grid <- vec_names_panelists |> 
     map(
-      ~ sensoreport:::predict_like(
+      ~ predict_like(
           data_coord_real = data_coord_real,
           data_grid = data_grid,
           data_hedonic_large = data_hedonic_large,
