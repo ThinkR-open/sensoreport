@@ -12,5 +12,20 @@ test_that("perform_senso_mapping works", {
   
   expect_true(inherits(plots_mapping$inter_ind_plot, "plotly"))
   expect_true(inherits(plots_mapping$inter_var_plot, "plotly"))
+  
+  # Test an error is the parameter is not a dataframe
+  expect_error(
+    object = perform_senso_mapping(
+      data_profiles = data_profiles_toy,
+      data_products = 1), 
+    regexp = "The data 'data_products' you provided is not a dataframe"
+  )
+  
+  expect_error(
+    object = perform_senso_mapping(
+      data_profiles = 1,
+      data_products = data_products_toy), 
+    regexp = "The data 'data_profiles' you provided is not a dataframe"
+  )
 
 })

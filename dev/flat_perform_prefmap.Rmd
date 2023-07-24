@@ -1,0 +1,597 @@
+---
+title: "flat_perform_prefmap.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+library(tibble)
+library(purrr)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# `perform_prefmap()`: Perform the preference mapping
+
+With `perform_prefmap()`, you can perform the preference mapping.
+
+This is based on the results of the PCA provided by the `perform_senso_mapping()` function (see vignette *c - Perform the multidimensional sensory analysis (mapping)* for more details). 
+
+The graph of individuals (i.e. products) is discretized to form a grid of fictitious products. For each `x` * `y` coordinate of these fictitious products, the liking score is predicted for each panelist. A linear regression model `liking ~ coordinate dim 1 + coordinate dim 2 + coordinate dim 1 * coordinate dim 2` is used to predict the liking score for each panelist. 
+
+Then, the fictitious product is stamped "liked" if its predicted score is greater than or equal to the average of the liking scores given by the panelist. Otherwise, it is stamped "unliked". The proportion of panelists who liked each fictitious product in the grid is then calculated. This value is projected onto the map using a response surface.
+
+This graph is displayed in an interactive format.
+
+```{r function-perform_prefmap}
+#' Perform the preference mapping
+#'
+#' @param res_mapping List. Result of the perform_senso_mapping() function.
+#' @param data_hedonic Dataframe. Hedonic data.
+#' @param color_min Character. Color for "do not like".
+#' @param color_max Character. Color for "like".
+#' @param resolution Integer. Resolution for the interactive plot.
+#' 
+#' @importFrom tibble tibble
+#' @importFrom tidyr pivot_wider
+#' @importFrom purrr map reduce
+#' @importFrom grDevices colorRampPalette
+#' @importFrom plotly add_trace
+#' @importFrom dplyr distinct pull
+#'
+#' @return A plotly preference mapping plot
+#' @export
+perform_prefmap <- function(res_mapping,
+                            data_hedonic,
+                            color_min = "white",
+                            color_max = "#EA485C", 
+                            resolution = 200) {
+
+  # Check parameters
+  if (isFALSE(inherits(res_mapping, "list"))) {
+    stop(
+      "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
+    )
+  } else {
+    if (any(names(res_mapping) != c("res_pca", "inter_ind_plot", "inter_var_plot"))) {
+      stop(
+        "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
+      )
+    } else {
+      if (isFALSE(inherits(res_mapping$res_pca, "PCA")) |
+          isFALSE(inherits(res_mapping$inter_ind_plot, "plotly")) |
+          isFALSE(inherits(res_mapping$inter_var_plot, "plotly"))) {
+        stop(
+          "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
+        )
+      }
+    }
+  }
+  
+  if (isFALSE(is.data.frame(data_hedonic))) {
+    stop("The data 'data_hedonic' you provided is not a dataframe.")
+  }
+  
+  # Find the ind coordinates
+  ## -- Find the products coordinates and take only the 2 first ones 
+  coord_prod <- as.data.frame(res_mapping$res_pca$ind$coord[, 1:2])
+  colnames(coord_prod) <- c("dim1", "dim2")
+  
+  # Create a grid to compute the surface response
+  ## -- Find the coordinates for the 2 first dimensions
+  vec_x1 <- coord_prod[, "dim1"]
+  vec_x2 <- coord_prod[, "dim2"]
+  
+  ## -- Get the interaction between 1st & 2nd coordinate
+  data_coord_real <- tibble(
+    dim1 = vec_x1,
+    dim2 = vec_x2
+  ) |>
+    mutate(
+      dim1dim2 = scale(dim1, center = TRUE, scale = FALSE) * scale(dim2, center = TRUE, scale = FALSE)
+    )
+  
+  ## -- Get the coordinates for the grid (depending on resolution)
+  size_x1 <- diff(range(vec_x1))
+  size_x2 <- diff(range(vec_x2))
+  grid_by <- max(size_x1, size_x2) / resolution
+  vec_grid_x1 <- seq(
+    from = (min(vec_x1) - size_x1 * 0.05), 
+    to = (max(vec_x1) + size_x1 * 0.05), 
+    by = grid_by
+  ) 
+  vec_grid_x2 <- seq(
+    from = (min(vec_x2) - size_x2 * 0.05),
+    to = (max(vec_x2) + size_x2 * 0.05), 
+    by = grid_by
+  )
+  
+  ## -- Create the grid
+  data_grid <- expand.grid(
+    dim1 = vec_grid_x1, 
+    dim2 = vec_grid_x2
+  ) |>
+    mutate(
+      dim1dim2 = scale(dim1, center = TRUE, scale = FALSE) * scale(dim2, center = TRUE, scale = FALSE)
+    )
+
+  # Get the proportion of panelists who like a given fictional product
+  ## -- Tranform the hedonic dataset to a large dataset
+  data_hedonic_large <- data_hedonic |> 
+  pivot_wider(
+    names_from = CONSUMER,
+    values_from = SCORE
+  )
+  
+  ## -- Predict if the panelists like a given fictional product of the grid
+  ## -- Get the proportion of panelists who like a given fictional product
+  vec_names_panelists <- data_hedonic |>
+    distinct(CONSUMER) |>
+    pull()
+  
+  prop_predict_like_grid <- vec_names_panelists |> 
+    map(
+      ~ sensoreport:::predict_like(
+          data_coord_real = data_coord_real,
+          data_grid = data_grid,
+          data_hedonic_large = data_hedonic_large,
+          panelist_name = .x
+      )
+    ) |>  
+    reduce(`+`) / length(vec_names_panelists) * 100
+  
+  data_surface_response <- tibble(
+    dim1 = data_grid$dim1, 
+    dim2 = data_grid$dim2,
+    prop_predict_like = as.vector(prop_predict_like_grid)
+  )
+  
+  # Plot the preference mapping
+  ## -- Get the colors palette
+  colors_palette <- tibble(
+    range = c(0, 1),
+    colors = c(color_min, color_max)
+  )
+  
+  ## -- Add the surface response to the individual plot
+  inter_plot_prefmap <- res_mapping$inter_ind_plot |> 
+    add_trace(data = data_surface_response,
+              x = ~ dim1,
+              y = ~ dim2,
+              z = ~ prop_predict_like,
+              type = "contour",
+              contours = list(
+                showlabels = TRUE, 
+                start = 0, 
+                end = 100, 
+                coloring = "heatmap"
+              ),
+              line = list(color = "white"),
+              colorscale = colors_palette,
+              hoverinfo = "none",
+              hoverlabel = list(bgcolor = "black", font = list(color = "white")),
+              colorbar = list(len = 1,
+                              lenmode = "fraction",
+                              title = "% of panelists who like the product"))
+  
+  return(inter_plot_prefmap)
+  
+}
+```
+
+```{r examples-perform_prefmap}
+data("data_hedonic_toy")
+
+res_mapping <- perform_senso_mapping(
+  data_profiles = data_profiles_toy,
+  data_products = data_products_toy
+)
+
+perform_prefmap(
+  res_mapping,
+  data_hedonic_toy
+)
+```
+
+```{r tests-perform_prefmap}
+test_that("perform_prefmap works", {
+
+  data("data_hedonic_toy")
+  
+  res_mapping <- perform_senso_mapping(
+    data_profiles = data_profiles_toy,
+    data_products = data_products_toy
+  )
+  
+  plot_prefmap <- perform_prefmap(
+    res_mapping = res_mapping,
+    data_hedonic = data_hedonic_toy
+  )
+  
+  expect_true(inherits(plot_prefmap, "plotly"))
+  
+  # Test an error is the parameter is not a PCA result
+  expect_error(
+    object = perform_prefmap(
+      res_mapping = 1,
+      data_hedonic = data_hedonic_toy
+    ),
+    regexp = "Are you sure the parameter 'res_mapping'"
+  )
+  
+  expect_error(
+    object = perform_prefmap(
+      res_mapping = list(a = 1, b = 2, c = 3),
+      data_hedonic = data_hedonic_toy
+    ),
+    regexp = "Are you sure the parameter 'res_mapping'"
+  )
+  
+  expect_error(
+    object = perform_prefmap(
+      res_mapping = list(res_pca = 1, inter_ind_plot = 2, inter_var_plot = 3),
+      data_hedonic = data_hedonic_toy
+    ),
+    regexp = "Are you sure the parameter 'res_mapping'"
+  )
+  
+  # Test an error is the parameter is not a dataframe
+  expect_error(
+    object = perform_prefmap(
+      res_mapping = res_mapping,
+      data_hedonic = 1), 
+    regexp = "The data 'data_hedonic' you provided is not a dataframe"
+  )
+
+})
+```
+
+# `predict_like()`: Predict if a given panelist likes a given fictional product or not
+    
+```{r function-predict_like}
+#' Predict if a given panelist likes a given fictional product or not
+#' 
+#' @param data_coord_real Dataframe. Table with coordinates of real products.
+#' @param data_grid Dataframe. Table with coordinates of fictional products (grid).
+#' @param data_hedonic_large Dataframe. Table with hedonic data.
+#' @param panelist_name Character. Name of the panelist.
+#'
+#' @importFrom tibble tibble
+#' @importFrom stats lm predict.lm
+#' 
+#' @return A table with the coordinates of the fictional products. A 0 if the panelist does not like it, a 1 otherwise.
+predict_like <- function(data_coord_real,
+                         data_grid,
+                         data_hedonic_large, 
+                         panelist_name){
+    
+  # Combine the real coordinates and the liking score
+  data_coord_real_liking <- tibble(
+    dim1 = data_coord_real$dim1,
+    dim2 = data_coord_real$dim2,
+    dim1dim2 = data_coord_real$dim1dim2,
+    liking_score = data_hedonic_large[[panelist_name]]
+  )
+
+  # Get the linear model to predict the liking score according to coordinates
+  mod_predict_liking <- lm(
+    formula = liking_score ~ dim1 + dim2 + dim1dim2, 
+    data = as.data.frame(data_coord_real_liking)
+  )
+
+  # Predict the liking score for each point of the fictional grid
+  predict_liking_grid <- predict.lm(
+    object = mod_predict_liking, 
+    newdata = data_grid, 
+    type = "response"
+  )
+  
+  # Find the mean of liking scores for the panelist
+  mean_liking_panelist <- mean(data_coord_real_liking$liking_score)
+  
+  # Define if the panelist like or not
+  # -- like = the predicted score is higher or = than the mean of the panelist
+  predict_liking_grid <- as.numeric(predict_liking_grid >= mean_liking_panelist)
+  # 0 means he/she does not like
+  # 1 means he/she likes
+  
+  # Return the matrix
+  res_grid_with_liking <- matrix(
+    predict_liking_grid,
+    nrow = length(unique(data_grid$dim1)), 
+    ncol = length(unique(data_grid$dim2))
+  )
+  
+  return(res_grid_with_liking)
+
+}
+```
+  
+```{r example-predict_like, eval=FALSE, echo=FALSE}
+data("data_grid_toy")
+data("data_hedonic_toy")
+data("data_coord_real_toy")
+
+data_hedonic_large_toy <- data_hedonic_toy |> 
+  tidyr::pivot_wider(
+    names_from = CONSUMER,
+    values_from = SCORE
+  )
+
+predict_like(
+  data_coord_real = data_coord_real_toy,
+  data_grid = data_grid_toy,
+  data_hedonic_large = data_hedonic_large_toy,
+  panelist_name = "1"
+)
+```
+  
+```{r tests-predict_like}
+test_that("predict_like works", {
+  
+  data("data_grid_toy")
+  data("data_hedonic_toy")
+  data("data_coord_real_toy")
+  
+  data_hedonic_large_toy <- data_hedonic_toy |>
+    tidyr::pivot_wider(names_from = CONSUMER,
+                       values_from = SCORE)
+  
+  # Unit test - panelist 1
+  res_predict_like_panelist1 <- predict_like(
+    data_coord_real = data_coord_real_toy,
+    data_grid = data_grid_toy,
+    data_hedonic_large = data_hedonic_large_toy,
+    panelist_name = "1"
+  )
+
+  # long dput ----
+  expect_equal(object = res_predict_like_panelist1[1:10, 1:10],
+               expected = structure(
+                 c(
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0
+                 ),
+                 dim = c(10L,
+                         10L)
+               ))
+  # end of long dput ----
+  
+  # Unit test - panelist 27
+  res_predict_like_panelist27 <- predict_like(
+    data_coord_real = data_coord_real_toy,
+    data_grid = data_grid_toy,
+    data_hedonic_large = data_hedonic_large_toy,
+    panelist_name = "27"
+  )
+  
+  # long dput ----
+  expect_equal(object = res_predict_like_panelist27[1:10, 1:10],
+               expected = structure(
+                 c(
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0,
+                   0
+                 ),
+                 dim = c(10L,
+                         10L)
+               ))
+
+  # end of long dput ----
+
+})
+```
+  
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_perform_prefmap.Rmd", 
+  vignette_name = "d - Perform the preference mapping",
+  check = FALSE,
+  overwrite = TRUE,
+  open_vignette = FALSE
+)
+```
+

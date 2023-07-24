@@ -7,6 +7,7 @@
 #' 
 #' @importFrom DBI dbConnect
 #' @importFrom RSQLite SQLite
+#' @importFrom tools file_ext
 #'
 #' @return The connection to the database.
 #' 
@@ -33,6 +34,15 @@
 #' DBI::dbDisconnect(con_db, shutdown = TRUE)
 connect_db <- function(dbdir = app_sys("database", "sensory_db.sqlite"), 
                        read_only = TRUE) {
+  
+  # Check parameters
+  if (isFALSE(file_ext(dbdir) == "sqlite")) {
+    stop("The database you provided is not a SQLite database.")
+  }
+  
+  if (isFALSE(file.exists(dbdir))) {
+    stop("The database you provided does not exist. Please specify a correct 'dbdir' parameter.")
+  }
   
   con_db <- tryCatch(
     

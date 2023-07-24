@@ -19,6 +19,7 @@ products <- c("PROD1", "PROD2", "PROD3", "PROD4",
 #| include: false
 # library(sensoreport)
 pkgload::load_all()
+library(dplyr)
 ```
 
 ```{r}
@@ -29,61 +30,61 @@ con_db <- connect_db()
 ```{r}
 #| include: false
 # Query the information about the session
-data_sessions <- tbl(con_db, "SESSIONS") %>%
-  filter(SESSION == session) %>%
+data_sessions <- tbl(con_db, "SESSIONS") |>
+  filter(SESSION == session) |>
   collect()
 
-date <- data_sessions %>% pull(DATE)
-country <- data_sessions %>% pull(COUNTRY)
-sponsor <- data_sessions %>% pull(LEADER)
+date <- data_sessions |> pull(DATE)
+country <- data_sessions |> pull(COUNTRY)
+sponsor <- data_sessions |> pull(LEADER)
 
 # Query the information about the products
-data_products <- tbl(con_db, "PRODUCTS") %>%
-  filter(PRODUCT %in% products) %>%
+data_products <- tbl(con_db, "PRODUCTS") |>
+  filter(PRODUCT %in% products) |>
   collect()
 
 nb_products <- nrow(data_products)
 
 # Query the sensory profiles
-data_profiles <- tbl(con_db, "PROFILES") %>% 
-  filter(SESSION == session & PRODUCT %in% products) %>% 
-  select(-SESSION) %>% 
+data_profiles <- tbl(con_db, "PROFILES") |> 
+  filter(SESSION == session & PRODUCT %in% products) |> 
+  select(-SESSION) |> 
   collect()
 
-nb_attributes <- data_profiles %>% 
-  distinct(ATTRIBUTE) %>% 
-  count() %>% 
+nb_attributes <- data_profiles |> 
+  distinct(ATTRIBUTE) |> 
+  count() |> 
   pull()
   
 # Query the hedonic data
-data_hedonic <- tbl(con_db, "HEDONIC") %>% 
-  filter(SESSION == session & PRODUCT %in% products) %>% 
-  select(-SESSION) %>% 
+data_hedonic <- tbl(con_db, "HEDONIC") |> 
+  filter(SESSION == session & PRODUCT %in% products) |> 
+  select(-SESSION) |> 
   collect()
 
-nb_consumers <- data_hedonic %>% 
-  distinct(CONSUMER) %>% 
-  count() %>% 
+nb_consumers <- data_hedonic |> 
+  distinct(CONSUMER) |> 
+  count() |> 
   pull()
 ```
 
-|                                  |    |                             |
-|:---------------------------------|----|:----------------------------|
-|  Session ID: `r session`         |    | Session date: `r date`      |
-|  Country: `r country`            |    | Study sponsor: `r sponsor`  | 
-|  Report date: `r Sys.Date()`     |    | Report author: `r author`   | 
+|                             |     |                            |
+|:----------------------------|-----|:---------------------------|
+| Session ID: `r session`     |     | Session date: `r date`     |
+| Country: `r country`        |     | Study sponsor: `r sponsor` |
+| Report date: `r Sys.Date()` |     | Report author: `r author`  |
 
 General information about the study:
 
-- **Number of products**: `r nb_products`
-- **Number of sensory attributes**: `r nb_attributes`
-- **Number of consumers who provided liking data**: `r nb_consumers`
+-   **Number of products**: `r nb_products`
+-   **Number of sensory attributes**: `r nb_attributes`
+-   **Number of consumers who provided liking data**: `r nb_consumers`
 
 ## Products
 
 ```{r}
 #| echo: false
-data_products %>% 
+data_products |> 
   DT::datatable()
 ```
 
@@ -110,29 +111,27 @@ Nunc sit amet nisi ut libero posuere vestibulum. Nullam rhoncus mauris et eros c
 
 ```{r}
 #| include: false
-plots_mapping <- perform_senso_mapping(
+res_mapping <- perform_senso_mapping(
     data_profiles = data_profiles,
     data_products = data_products
   )
 ```
 
-:::: {.columns}
-
+::: columns
 ::: {.column width="40%"}
 ```{r}
 #| echo: false
-plots_mapping$inter_ind_plot
+res_mapping$inter_ind_plot
 ```
 :::
 
 ::: {.column width="60%"}
 ```{r}
 #| echo: false
-plots_mapping$inter_var_plot
+res_mapping$inter_var_plot
 ```
 :::
-
-::::
+:::
 
 ## Preference mapping
 
@@ -140,14 +139,22 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in eleifend enim, u
 
 Nunc sit amet nisi ut libero posuere vestibulum. Nullam rhoncus mauris et eros congue condimentum. Aenean nibh dolor, luctus gravida bibendum eget, fringilla vitae diam. Suspendisse ullamcorper tortor eget felis fringilla, quis laoreet metus gravida. Curabitur sed nulla mattis, interdum lacus condimentum, sodales tortor. Nunc pellentesque vitae sem pharetra efficitur. Aliquam nec est non odio varius mattis. Ut auctor nisi eget posuere tempor. Sed a facilisis tellus, eget tincidunt arcu.
 
+```{r}
+#| echo: false
+perform_prefmap(
+  res_mapping = res_mapping,
+  data_hedonic = data_hedonic
+)
+```
+
 ## Explore the raw data
 
 ### Sensory data
 
 ```{r}
 #| echo: false
-data_profiles %>% 
-  mutate(SCORE = round(SCORE, 1)) %>% 
+data_profiles |> 
+  mutate(SCORE = round(SCORE, 1)) |> 
   DT::datatable()
 ```
 
@@ -155,8 +162,8 @@ data_profiles %>%
 
 ```{r}
 #| echo: false
-data_hedonic %>% 
-  mutate(SCORE = round(SCORE, 1)) %>% 
+data_hedonic |> 
+  mutate(SCORE = round(SCORE, 1)) |> 
   DT::datatable()
 ```
 

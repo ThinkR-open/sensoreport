@@ -2,7 +2,7 @@
 
 #' Create the plot with the unidimensional analysis
 #' 
-#' @param data Tibble. The sensory data.
+#' @param data_profiles Tibble. The sensory data.
 #' 
 #' @importFrom ggplot2 ggplot aes geom_col labs facet_wrap theme_minimal theme element_blank
 #' @importFrom plotly ggplotly
@@ -14,12 +14,17 @@
 #' data("data_profiles_toy")
 #'
 #' plot_unidim_analysis(
-#'   data = data_profiles_toy
+#'   data_profiles = data_profiles_toy
 #' )
-plot_unidim_analysis <- function(data) {
+plot_unidim_analysis <- function(data_profiles) {
+  
+  # Check parameters
+  if (isFALSE(is.data.frame(data_profiles))) {
+    stop("The data you provided is not a dataframe.")
+  }
   
   # Static plot
-  unidim_plot <- ggplot(data = data) +
+  unidim_plot <- ggplot(data = data_profiles) +
     aes(x = PRODUCT,
         y = SCORE,
         fill = PRODUCT) +

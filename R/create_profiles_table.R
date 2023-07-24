@@ -15,7 +15,7 @@
 #' for (i in 1:6) {
 #'   list_profiles_data[[i]] <- create_toy_data(
 #'     data = senso.cocktail
-#'     ) %>% 
+#'     ) |> 
 #'     mutate(SESSION = paste0("SESS230", i))
 #' }
 #'
@@ -24,18 +24,18 @@
 #' )
 create_profiles_table <- function(list_data){
   
-  profiles_table <- list_data %>%
+  profiles_table <- list_data |>
     map(
-      ~ .x %>%
-        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) %>%
-        pivot_longer(cols = -c(PRODUCT, SESSION)) %>%
+      ~ .x |>
+        mutate(PRODUCT = paste0("PROD", rownames(list_data[[1]]))) |>
+        pivot_longer(cols = -c(PRODUCT, SESSION)) |>
         rename(ATTRIBUTE = name,
-               SCORE = value) %>%
+               SCORE = value) |>
         mutate(
           ATTRIBUTE = str_replace_all(ATTRIBUTE, "\\.", " "),
           ATTRIBUTE = str_to_title(ATTRIBUTE)
         )
-    ) %>% 
+    ) |> 
     bind_rows()
     
   return(profiles_table)

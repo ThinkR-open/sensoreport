@@ -22,17 +22,18 @@ Imports:
     ggplot2,
     glue,
     golem,
+    grDevices,
     here,
-    magrittr,
     plotly,
     purrr,
     RSQLite,
     shiny,
     stats,
     stringr,
-    tidyr
+    tibble,
+    tidyr,
+    tools
 Suggests: 
-    dbplyr,
     knitr,
     rmarkdown,
     SensoMineR,
@@ -40,7 +41,7 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
-Config/fusen/version: 0.5.0.9008
+Config/fusen/version: 0.5.1
 Config/Needs/website: ThinkR-open/thinkrtemplate
 Encoding: UTF-8
 LazyData: true

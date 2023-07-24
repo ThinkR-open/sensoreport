@@ -5,9 +5,15 @@ test_that("perform_unidim_analysis works", {
   data("data_profiles_toy")
   
   my_unidim_plot <- plot_unidim_analysis(
-    data = data_profiles_toy
+    data_profiles = data_profiles_toy
   )
   
   expect_true(inherits(my_unidim_plot, "plotly"))
 
+  # Test an error is the parameter is not a dataframe
+  expect_error(
+    object = plot_unidim_analysis(data_profiles = 1), 
+    regexp = "The data you provided is not a dataframe"
+  )
+  
 })

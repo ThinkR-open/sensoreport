@@ -16,6 +16,8 @@ pkgload::load_all(export_all = FALSE)
 
 # `connect_db()`: Connect to the sensory database
 
+With `connect_db()`, you can open a connection to query the sensory database. The database is stored in the package for demonstration purposes.
+
 ```{r function-connect_db}
 #' Connect to the sensory database
 #'
@@ -24,12 +26,22 @@ pkgload::load_all(export_all = FALSE)
 #' 
 #' @importFrom DBI dbConnect
 #' @importFrom RSQLite SQLite
+#' @importFrom tools file_ext
 #'
 #' @return The connection to the database.
 #' 
 #' @export
 connect_db <- function(dbdir = app_sys("database", "sensory_db.sqlite"), 
                        read_only = TRUE) {
+  
+  # Check parameters
+  if (isFALSE(file_ext(dbdir) == "sqlite")) {
+    stop("The database you provided is not a SQLite database.")
+  }
+  
+  if (isFALSE(file.exists(dbdir))) {
+    stop("The database you provided does not exist. Please specify a correct 'dbdir' parameter.")
+  }
   
   con_db <- tryCatch(
     
@@ -83,9 +95,20 @@ test_that("query_database works", {
   # Disconnect
   DBI::dbDisconnect(con_db, shutdown = TRUE)
   
+  # Test an error if the database does not exist
+  expect_error(
+    object = connect_db(dbdir = "random/sensory_db.sqlite"), 
+    regexp = "The database you provided does not exist"
+  )
+  
+  # Test an error if the database is not a SQLite
+  expect_error(
+    object = connect_db(dbdir = "random/sensory_db.duckdb"), 
+    regexp = "The database you provided is not a SQLite database"
+  )
+  
 })
 ```
-
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop

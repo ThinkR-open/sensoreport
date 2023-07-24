@@ -13,4 +13,16 @@ test_that("query_database works", {
   # Disconnect
   DBI::dbDisconnect(con_db, shutdown = TRUE)
   
+  # Test an error if the database does not exist
+  expect_error(
+    object = connect_db(dbdir = "random/sensory_db.sqlite"), 
+    regexp = "The database you provided does not exist"
+  )
+  
+  # Test an error if the database is not a SQLite
+  expect_error(
+    object = connect_db(dbdir = "random/sensory_db.duckdb"), 
+    regexp = "The database you provided is not a SQLite database"
+  )
+  
 })
