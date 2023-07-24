@@ -58,12 +58,13 @@ perform_prefmap <- function(res_mapping,
       "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
     )
   } else {
-    if (any(names(res_mapping) != c("res_pca", "inter_ind_plot", "inter_var_plot"))) {
+    if (any(names(res_mapping) != c("res_pca", "vec_info_tooltip", "inter_ind_plot", "inter_var_plot"))) {
       stop(
         "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
       )
     } else {
       if (isFALSE(inherits(res_mapping$res_pca, "PCA")) |
+          isFALSE(inherits(res_mapping$vec_info_tooltip, "glue")) |
           isFALSE(inherits(res_mapping$inter_ind_plot, "plotly")) |
           isFALSE(inherits(res_mapping$inter_var_plot, "plotly"))) {
         stop(
@@ -160,24 +161,29 @@ perform_prefmap <- function(res_mapping,
   
   ## -- Add the surface response to the individual plot
   inter_plot_prefmap <- res_mapping$inter_ind_plot |> 
-    add_trace(data = data_surface_response,
-              x = ~ dim1,
-              y = ~ dim2,
-              z = ~ prop_predict_like,
-              type = "contour",
-              contours = list(
-                showlabels = TRUE, 
-                start = 0, 
-                end = 100, 
-                coloring = "heatmap"
-              ),
-              line = list(color = "white"),
-              colorscale = colors_palette,
-              hoverinfo = "none",
-              hoverlabel = list(bgcolor = "black", font = list(color = "white")),
-              colorbar = list(len = 1,
-                              lenmode = "fraction",
-                              title = "% of panelists who like the product"))
+    add_trace(
+      data = data_surface_response,
+      x = ~ dim1,
+      y = ~ dim2,
+      hoverinfo = 'text',
+      text = res_mapping$vec_info_tooltip,
+      z = ~ prop_predict_like,
+      type = "contour",
+      contours = list(
+        showlabels = TRUE, 
+        start = 0, 
+        end = 100, 
+        coloring = "heatmap"
+        ),
+      line = list(color = "white"),
+      colorscale = colors_palette,
+      hoverinfo = "none",
+      hoverlabel = list(bgcolor = "black", font = list(color = "white")),
+      colorbar = list(
+        len = 1,
+        lenmode = "fraction",
+        title = "% of panelists who like the product")
+    )
   
   return(inter_plot_prefmap)
   

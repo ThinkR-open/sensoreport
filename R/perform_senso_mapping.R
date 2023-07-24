@@ -198,6 +198,7 @@ perform_senso_mapping <- function(data_profiles,
   return(
     list(
       res_pca = res_pca,
+      vec_info_tooltip = vec_info,
       inter_ind_plot = inter_ind_plot,
       inter_var_plot = inter_var_plot
     )
