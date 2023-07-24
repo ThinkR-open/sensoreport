@@ -6,7 +6,7 @@
 #' @param session Character. ID of the sensory session.
 #' @param products Character. Vector of products to include into the report.
 #' @param output_dir Character. Path of the folder to save the report.
-#' @param report_template Character. Path of the qmd report template.
+#' @param report_template Character. Path of the folder containing the report template.
 #' 
 #' @importFrom withr with_dir
 #' @importFrom quarto quarto_render
@@ -44,7 +44,7 @@ create_report <- function(author,
                           session,
                           products,
                           output_dir,
-                          report_template = app_sys("report", "report_template.qmd")) {
+                          report_template = app_sys("report")) {
   
   # Create the list of parameters
   list_param_report <- list(
@@ -60,16 +60,16 @@ create_report <- function(author,
   )
   
   # Move the .qmd template into the temp directory
-  file.copy(
-    from = report_template,
-    to = output_dir
+  fs::dir_copy(
+    path = report_template,
+    new_path = output_dir
   )
 
   # Render the report
   with_dir(
-    output_dir,{
+    file.path(output_dir, basename(report_template)), {
       quarto_render(
-        input = basename(report_template),
+        input = "report_template.qmd",
         execute_params = list_param_report,
         output_file = output_report,
         quiet = TRUE
@@ -78,7 +78,7 @@ create_report <- function(author,
   
   return(
     list(
-      output_dir_report = output_dir,
+      output_dir_report = file.path(output_dir, basename(report_template)),
       output_file_report = output_report
     )
   )

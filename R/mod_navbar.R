@@ -14,7 +14,11 @@ mod_navbar_ui <- function(id) {
       tags$a(
         class = "navbar-brand",
         href = "#",
-        "{sensoreport}"
+        tags$img(
+          src = "www/logo.png",
+          width = "25%",
+          style = "margin-left: auto; margin-right: auto"
+        )
       )
     )
   )

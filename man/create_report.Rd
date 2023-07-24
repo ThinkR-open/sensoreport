@@ -9,7 +9,7 @@ create_report(
   session,
   products,
   output_dir,
-  report_template = app_sys("report", "report_template.qmd")
+  report_template = app_sys("report")
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ create_report(
 
 \item{output_dir}{Character. Path of the folder to save the report.}
 
-\item{report_template}{Character. Path of the qmd report template.}
+\item{report_template}{Character. Path of the folder containing the report template.}
 }
 \value{
 A list with the folder and the file of the created report.

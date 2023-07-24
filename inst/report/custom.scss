@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Sofia&display=swap');
+
+/*-- scss:defaults --*/
+$main-font:             'Sofia', cursive !default;
+$font-color:         #55B4D2 !default;
+$headings-font-weight:  500 !default;
+$body-color:            #7f7f7f !default;
+$toc-active-border: #55B4D2 !default;
+$toc-color: #55B4D2 !default;
+
+/*-- scss:rules --*/
+h1, h2, h3, h4, h5, h6 {
+  font-family: $main-font;
+}
+
+.title {
+  color: white;
+}
+
+h2 {
+  color: $font-color;
+}
+
+h3, h4, h5, h6 {
+  color: $body-color;
+}
+
+.nav-link .active {
+  color: $font-color;
+}

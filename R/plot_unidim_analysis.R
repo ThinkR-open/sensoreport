@@ -4,9 +4,10 @@
 #' 
 #' @param data_profiles Tibble. The sensory data.
 #' 
-#' @importFrom ggplot2 ggplot aes geom_col labs facet_wrap theme_minimal theme element_blank scale_fill_brewer
+#' @importFrom ggplot2 ggplot aes geom_col labs facet_wrap theme_minimal theme element_blank scale_fill_manual
 #' @importFrom plotly ggplotly
-#' @importFrom dplyr vars
+#' @importFrom dplyr vars distinct
+#' @importFrom grDevices colorRampPalette
 #' 
 #' @return A ggplotly
 #' @export
@@ -23,13 +24,16 @@ plot_unidim_analysis <- function(data_profiles) {
     stop("The data you provided is not a dataframe.")
   }
   
+  # Find de number of products
+  nb_prod <- data_profiles |> distinct(PRODUCT) |> nrow()
+  
   # Static plot
   unidim_plot <- ggplot(data = data_profiles) +
     aes(x = PRODUCT,
         y = SCORE,
         fill = PRODUCT) +
     geom_col() +
-    scale_fill_brewer(palette = "Blues") +
+    scale_fill_manual(values = colorRampPalette(c("white", "#55B4D2"))(n = nb_prod + 1)[-1]) +
     labs(x = "",
          y = "Intensity on a 0-10 scale") +
     facet_wrap(facets = vars(ATTRIBUTE)) +
