@@ -77,8 +77,11 @@ fusen::add_flat_template(
 # Simulate package installation
 pkgload::load_all()
 
+# Inflate all flat files
+fusen::inflate_all_no_check()
+
 # Generate documentation and deal with dependencies
-attachment::att_amend_desc()
+attachment::att_amend_desc(extra.suggests = "dbplyr")
 
 # Check the package
 devtools::check()

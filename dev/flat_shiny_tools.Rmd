@@ -14,46 +14,6 @@ library(shiny)
 pkgload::load_all()
 ```
 
-# Create icon
-
-```{r function-my_fun}
-#' create_icon
-#'
-#' @param href url to follow when click
-#' @param src img to use as icon
-#'
-#' @importFrom glue glue
-#' @importFrom shiny HTML
-#'
-#' @noRd
-create_icon <- function(href, src) {
-  
-  if (!is.null(href)) {
-    if (href != "") {
-      htmlTemplate(
-        filename = app_sys("app", "www", "templates", "thinkr", "icon.html"),
-        href = href,
-        src = src
-      )  
-    } 
-  }
-}
-```
-
-```{r examples-my_fun}
-create_icon("plop.fr", "www/icons/linkedin.png")
-```
-
-```{r tests-my_fun}
-test_that("create_icon works", {
-  code <- create_icon("plop.fr", "www/icons/linkedin.png")
-  expect_true(inherits(code, "shiny.tag.list"))
-  expect_snapshot(code)
-  
-  expect_null(create_icon("", "www/icons/linkedin.png"))
-})
-```
-
 # `accordion()`: Create accordion
 
 See Boostrap documentation for more details:
