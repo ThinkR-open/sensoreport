@@ -31,8 +31,8 @@
 #' )
 perform_prefmap <- function(res_mapping,
                             data_hedonic,
-                            color_min = "#EA485C",
-                            color_max = "#A9A9A9", 
+                            color_min = "white",
+                            color_max = "#EA485C", 
                             resolution = 200) {
 
   # Check parameters
@@ -136,11 +136,9 @@ perform_prefmap <- function(res_mapping,
   
   # Plot the preference mapping
   ## -- Get the colors palette
-  vec_colors_min <- colorRampPalette(c(color_min, "white"))(49)
-  vec_colors_max <- colorRampPalette(c("white", color_max))(50)
-  colors_palette <- c(
-    vec_colors_min,
-    vec_colors_max
+  colors_palette <- tibble(
+    range = c(0, 1),
+    colors = c(color_min, color_max)
   )
   
   ## -- Add the surface response to the individual plot
@@ -150,7 +148,13 @@ perform_prefmap <- function(res_mapping,
               y = ~ dim2,
               z = ~ prop_predict_like,
               type = "contour",
-              contours = list(showlabels = TRUE, start = 0, end = 100, coloring = "heatmap"),
+              contours = list(
+                showlabels = TRUE, 
+                start = 0, 
+                end = 100, 
+                coloring = "heatmap"
+              ),
+              line = list(color = "white"),
               colorscale = colors_palette,
               hoverinfo = "none",
               hoverlabel = list(bgcolor = "black", font = list(color = "white")),
