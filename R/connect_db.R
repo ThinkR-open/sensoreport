@@ -41,7 +41,7 @@ connect_db <- function(dbdir = app_sys("database", "sensory_db.sqlite"),
   }
   
   if (isFALSE(file.exists(dbdir))) {
-    stop("The database you provided does not exist. Please specify a correct 'dbdir' parameter.")
+    warning("The database you provided does not exist. Please specify a correct 'dbdir' parameter. Or a new database will be created.")
   }
   
   con_db <- tryCatch(

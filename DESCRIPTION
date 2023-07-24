@@ -26,19 +26,20 @@ Imports:
     here,
     plotly,
     purrr,
+    quarto,
     RSQLite,
     shiny,
     stats,
     stringr,
     tibble,
     tidyr,
-    tools
+    tools,
+    withr
 Suggests: 
     knitr,
     rmarkdown,
     SensoMineR,
-    testthat,
-    withr
+    testthat
 VignetteBuilder: 
     knitr
 Config/fusen/version: 0.5.1

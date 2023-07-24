@@ -19,6 +19,19 @@ flat_create_database.Rmd:
     check: false
     document: true
     overwrite: 'yes'
+flat_create_report.Rmd:
+  path: dev/flat_create_report.Rmd
+  state: active
+  R: R/create_report.R
+  tests: tests/testthat/test-create_report.R
+  vignettes: vignettes/e-create-the-sensory-report.Rmd
+  inflate:
+    flat_file: dev/flat_create_report.Rmd
+    vignette_name: e - Create the sensory report
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
 flat_perform_multidim_analysis.Rmd:
   path: dev/flat_perform_multidim_analysis.Rmd
   state: active
