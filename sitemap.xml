@@ -19,6 +19,12 @@
     <loc>/articles/c-perform-the-multidimensional-sensory-analysis--mapping-.html</loc>
   </url>
   <url>
+    <loc>/articles/d-perform-the-preference-mapping.html</loc>
+  </url>
+  <url>
+    <loc>/articles/e-create-the-sensory-report.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -32,6 +38,15 @@
   </url>
   <url>
     <loc>/reference/connect_db.html</loc>
+  </url>
+  <url>
+    <loc>/reference/create_report.html</loc>
+  </url>
+  <url>
+    <loc>/reference/data_coord_real_toy.html</loc>
+  </url>
+  <url>
+    <loc>/reference/data_grid_toy.html</loc>
   </url>
   <url>
     <loc>/reference/data_hedonic_toy.html</loc>
@@ -49,10 +64,10 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/perform_senso_mapping.html</loc>
+    <loc>/reference/perform_prefmap.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
+    <loc>/reference/perform_senso_mapping.html</loc>
   </url>
   <url>
     <loc>/reference/plot_unidim_analysis.html</loc>
