@@ -63,7 +63,7 @@ jobs:
 
       - name: Installing the package
         run: |
-          install.packages(c("remotes"))
+          install.packages(c("remotes", "dbplyr"))
           remotes::install_local()
         shell: Rscript {0}
 
