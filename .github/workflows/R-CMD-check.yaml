@@ -10,8 +10,6 @@ on:
   pull_request:
     branches: [main, master]
 
-name: quarto-setup
-
 jobs:
   quarto-linux:
     runs-on: ubuntu-latest
