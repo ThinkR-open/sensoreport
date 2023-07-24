@@ -32,7 +32,7 @@
 perform_prefmap <- function(res_mapping,
                             data_hedonic,
                             color_min = "white",
-                            color_max = "#EA485C", 
+                            color_max = "#54A2E1", 
                             resolution = 200) {
 
   # Check parameters

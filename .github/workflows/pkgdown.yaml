@@ -20,6 +20,10 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - uses: quarto-dev/quarto-actions/setup@v2
+      - run: |
+          quarto --version
+
       - uses: actions/checkout@v3
 
       - uses: r-lib/actions/setup-pandoc@v2

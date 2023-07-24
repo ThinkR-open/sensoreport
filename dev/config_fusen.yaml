@@ -88,3 +88,22 @@ flat_query_database.Rmd:
     check: false
     document: true
     overwrite: 'yes'
+flat_shiny_tools.Rmd:
+  path: dev/flat_shiny_tools.Rmd
+  state: active
+  R:
+  - R/accordion.R
+  - R/accordion_item.R
+  - R/create_icon.R
+  tests:
+  - tests/testthat/test-create_icon.R
+  - tests/testthat/test-accordion.R
+  - tests/testthat/test-accordion_item.R
+  vignettes: []
+  inflate:
+    flat_file: dev/flat_shiny_tools.Rmd
+    vignette_name: .na
+    open_vignette: true
+    check: false
+    document: true
+    overwrite: 'yes'

@@ -89,7 +89,7 @@ perform_senso_mapping <- function(data_profiles,
       text = vec_info,
       type = "scatter",
       mode = "markers",
-      marker = list(size = 6, color = "orange"),
+      marker = list(size = 6, color = "black"),
       showlegend = TRUE
     ) |>
     layout(
@@ -164,8 +164,8 @@ perform_senso_mapping <- function(data_profiles,
         list(type = "circle",
              xref = 'x', x0 = -1, x1 = 1,
              yref = 'y', y0 = -1, y1 = 1,
-             fillcolor = "orange", 
-             line = list(color = "orange"),
+             fillcolor = "#54A2E1", 
+             line = list(color = "#54A2E1"),
              opacity = 0.1)),
       legend = list(
         orientation = "h",

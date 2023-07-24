@@ -4,7 +4,7 @@
 #' 
 #' @param data_profiles Tibble. The sensory data.
 #' 
-#' @importFrom ggplot2 ggplot aes geom_col labs facet_wrap theme_minimal theme element_blank
+#' @importFrom ggplot2 ggplot aes geom_col labs facet_wrap theme_minimal theme element_blank scale_fill_brewer
 #' @importFrom plotly ggplotly
 #' @importFrom dplyr vars
 #' 
@@ -29,6 +29,7 @@ plot_unidim_analysis <- function(data_profiles) {
         y = SCORE,
         fill = PRODUCT) +
     geom_col() +
+    scale_fill_brewer(palette = "Blues") +
     labs(x = "",
          y = "Intensity on a 0-10 scale") +
     facet_wrap(facets = vars(ATTRIBUTE)) +

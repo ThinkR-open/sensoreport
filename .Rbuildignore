@@ -10,3 +10,5 @@ $run_dev.*
 ^README\.Rmd$
 ^codecov\.yml$
 ^sensoreport\.Rproj$
+^app\.R$
+^_pkgdown\.yml$

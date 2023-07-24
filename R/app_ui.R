@@ -8,9 +8,17 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    # Add an icon when the server is busy
+    HTML('<div class="lds-dual-ring" id = "dualring"></div>'),
     # Your application UI logic
-    fluidPage(
-      h1("sensoreport")
+    fixedPage(
+      theme = sensoryreport_theme(),
+      mod_navbar_ui("mod_navbar"),
+      tags$div(
+        class = "row g-5",
+        mod_params_ui("mod_params"),
+        mod_report_ui("mod_report")
+      )
     )
   )
 }
@@ -38,4 +46,23 @@ golem_add_external_resources <- function() {
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
   )
+}
+
+#' signature_theme
+#'
+#' @importFrom bslib bs_theme bs_add_rules
+#' @importFrom sass sass_file
+#'
+#' @noRd
+sensoryreport_theme <- function() {
+
+  bs_theme(
+    version = 5,
+    primary = "#7f7f7f",
+    secondary = "#54A2E1"
+  ) |>
+    bs_add_rules(
+      sass_file(app_sys("app", "www", "custom.sass"))
+    )
+
 }
