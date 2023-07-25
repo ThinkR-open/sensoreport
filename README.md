@@ -1,61 +1,54 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# sensoreport
+# sensoreport <img src="man/figures/hex.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Codecov test
 coverage](https://codecov.io/gh/ThinkR-open/sensoreport/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ThinkR-open/sensoreport?branch=main)
 [![R-CMD-check](https://github.com/ThinkR-open/sensoreport/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ThinkR-open/sensoreport/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of sensoreport is to …
+{sensoreport} is a *demo* Shiny application dedicated to the creation of
+**automated**, **reproducible**, **interactive** and **ready-to-share**
+sensory/consumer reports.
 
-## Installation
+Such tool can enable sensory analysts and panel leaders to spend less
+time preparing reports, and add more value to their work.
 
-You can install the development version of sensoreport from
-[GitHub](https://github.com/) with:
+## When software development meets sensory sciences to create and share ad-hoc reproducible sensory reports: Opportunities & challenges
 
-``` r
-# install.packages("devtools")
-devtools::install_github("ThinkR-open/sensoreport")
-```
+<img src="man/figures/softwaresensory.png" width="100%" />
 
-## Example
+## Demo app
 
-This is a basic example which shows you how to solve a common problem:
+The app is available here: <https://connect.thinkr.fr/sensoreport/>
 
-``` r
-# library(sensoreport)
-## basic example code
-```
+<img src="man/figures/app.png" width="100%" />
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## Highlights
 
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
+- Robust tool thanks to unit tests
+- Versioned tool
+- Documented tool
+- Continuously deployed tool (each modification to the code
+  automatically triggers deployment of the app in production)
+- Automated and industrialized workflow
+- Seamless workflow for the users (sensory analysts and panel leaders)
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+## User guide
 
-You can also embed plots, for example:
+- Specify your name
+- Choose a toy session
+- Select the products you want to include in the report
+- Run the report
+- Visualize the report and download it if you want
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+## Development
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+- `{fusen}` to create, document and test business functions (sensory
+  mapping, preference mapping, etc.):
+  <https://github.com/ThinkR-open/fusen>
+- `{golem}` to create the Shiny app into a R package:
+  <https://github.com/ThinkR-open/golem>

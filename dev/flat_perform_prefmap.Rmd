@@ -182,7 +182,13 @@ perform_prefmap <- function(res_mapping,
       colorbar = list(
         len = 1,
         lenmode = "fraction",
-        title = "% of panelists who like the product")
+        title = "% of panelists\nwho like the product")
+    ) |> 
+    layout(
+      title = list(
+        text = "Preference mapping",
+        font = list(size = 14, color = "#444444")
+      )
     )
   
   return(inter_plot_prefmap)
