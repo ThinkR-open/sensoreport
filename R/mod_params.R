@@ -13,7 +13,7 @@ mod_params_ui <- function(id){
 
   tagList(
     tags$div(
-      class = "col-4",
+      class = "col-xs-12 col-sm-4",
 
       tags$div(
         class = "form",
