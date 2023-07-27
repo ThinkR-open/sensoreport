@@ -54,6 +54,7 @@ jobs:
             appDir = getwd(),
             appName = Sys.getenv("APP_NAME"),
             appFiles = appFiles,
+            appFileManifest = "manifest.json",
             appPrimaryDoc = "app.R",
             account = Sys.getenv("CONNECT_USER"),
             server = Sys.getenv("CONNECT_NAME"),

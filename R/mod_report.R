@@ -13,7 +13,7 @@ mod_report_ui <- function(id){
 
   tagList(
     tags$div(
-      class = "col-8",
+      class = "col-xs-12 col-sm-8",
       tags$div(
         htmlOutput(ns("report"))
       )

@@ -6,3 +6,4 @@
 !.github/*/*
 !.gitlab/*/*
 inst/doc
+rsconnect/
