@@ -50,7 +50,7 @@ mod_report_server <- function(id, r_global){
                 seamless = "seamless",
                 src = paste0("reportlibrary/", r_global$report_file),
                 frameborder = "0",
-                style = "width:100vw;height:100vh;"
+                style = "width:120%;height:100vh;"
                 )
               )
             )
