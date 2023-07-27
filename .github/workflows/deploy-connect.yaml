@@ -23,7 +23,8 @@ jobs:
       - name: Installing required packages
         run: |
           install.packages(
-            c("remotes", "rsconnect", "httr")
+            c("remotes", "rsconnect", "httr"),
+            repos = "https://ppm.thinkr.fr/prod-cran/2023-02-10"
           )
         shell: Rscript {0}
       - name: Installing dependencies
