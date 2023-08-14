@@ -12,3 +12,7 @@ $run_dev.*
 ^sensoreport\.Rproj$
 ^app\.R$
 ^_pkgdown\.yml$
+^CODE_OF_CONDUCT\.md$
+^CONTRIBUTING\.md$
+^manifest\.json$
+rsconnect

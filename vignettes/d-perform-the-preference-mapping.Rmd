@@ -44,8 +44,8 @@ res_mapping <- perform_senso_mapping(
 )
 
 perform_prefmap(
-  res_mapping,
-  data_hedonic_toy
+  res_mapping = res_mapping,
+  data_hedonic = data_hedonic_toy
 )
 ```
 

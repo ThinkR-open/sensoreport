@@ -58,7 +58,8 @@ plot_unidim_analysis <- function(data_sensory) {
     geom_col() +
     scale_fill_manual(values = colorRampPalette(c("white", "#55B4D2"))(n = nb_prod + 1)[-1]) +
     labs(x = "",
-         y = "Number of associations") +
+         y = "Number of associations", 
+         fill = "") +
     facet_wrap(facets = vars(GROUP)) +
     theme_minimal() +
     theme(axis.text.x = element_blank(),
@@ -67,7 +68,7 @@ plot_unidim_analysis <- function(data_sensory) {
   # Interactive plot
   inter_plot <- ggplotly(
     p = unidim_plot,
-    tooltip = c("x", "y")
+    tooltip = c("y")
   )
   
   return(inter_plot)

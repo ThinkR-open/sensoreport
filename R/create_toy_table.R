@@ -17,14 +17,14 @@
 #' @examples
 #' create_toy_table(
 #'   nbsessions = 2, 
-#'   nbprod = 3, 
+#'   nbprod = 4, 
 #'   nbconsumers = 4,
 #'   type = "senso"
 #' )
 #'
 #' create_toy_table(
 #'   nbsessions = 2, 
-#'   nbprod = 3, 
+#'   nbprod = 4, 
 #'   nbconsumers = 4,
 #'   type = "hedo"
 #' )

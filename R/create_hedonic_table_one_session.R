@@ -21,10 +21,14 @@ create_hedonic_table_one_session <- function(nbprod,
                                              nbconsumers) {
   
   hedonic_table <- 1:nbconsumers |> 
-    map_dfc(~ sample(
-      1:10, 
-      size = nbprod, 
-      replace = TRUE)) |> 
+    map_dfc( ~ c(
+      sample(1:5,
+             size = nbprod / 2,
+             replace = TRUE),
+      sample(6:10,
+             size = nbprod / 2, 
+             replace = TRUE)
+    )) |> 
     set_names(1:nbconsumers) |> 
     mutate(PRODUCT = paste0("PROD", 1:nbprod)) |>
     select(PRODUCT, everything())

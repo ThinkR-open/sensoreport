@@ -28,8 +28,8 @@
 #' )
 #'
 #' perform_prefmap(
-#'   res_mapping,
-#'   data_hedonic_toy
+#'   res_mapping = res_mapping,
+#'   data_hedonic = data_hedonic_toy
 #' )
 perform_prefmap <- function(res_mapping,
                             data_hedonic,
@@ -43,12 +43,13 @@ perform_prefmap <- function(res_mapping,
       "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
     )
   } else {
-    if (any(names(res_mapping) != c("res_mca", "vec_info_tooltip", "inter_ind_plot", "inter_var_plot"))) {
+    if (any(names(res_mapping) != c("coord_prod", "coord_attr", "vec_info_tooltip", "inter_ind_plot", "inter_var_plot"))) {
       stop(
         "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
       )
     } else {
-      if (isFALSE(inherits(res_mapping$res_mca, "MCA")) |
+      if (isFALSE(inherits(res_mapping$coord_prod, "data.frame")) |
+          isFALSE(inherits(res_mapping$coord_attr, "data.frame")) |
           isFALSE(inherits(res_mapping$vec_info_tooltip, "glue")) |
           isFALSE(inherits(res_mapping$inter_ind_plot, "plotly")) |
           isFALSE(inherits(res_mapping$inter_var_plot, "plotly"))) {
@@ -63,13 +64,9 @@ perform_prefmap <- function(res_mapping,
     stop("The data 'data_hedonic' you provided is not a dataframe.")
   }
   
-  # Find the ind coordinates
-  ## -- Find the products coordinates and take only the 2 first ones 
-  coord_prod <- as.data.frame(res_mapping$res_mca$ind$coord[, 1:2])
-  colnames(coord_prod) <- c("dim1", "dim2")
-  
   # Create a grid to compute the surface response
   ## -- Find the coordinates for the 2 first dimensions
+  coord_prod <- res_mapping$coord_prod
   vec_x1 <- coord_prod[, "dim1"]
   vec_x2 <- coord_prod[, "dim2"]
   
@@ -145,13 +142,12 @@ perform_prefmap <- function(res_mapping,
   )
   
   ## -- Add the surface response to the individual plot
-  inter_plot_prefmap <- res_mapping$inter_ind_plot |> 
+  inter_plot_prefmap_surf <- res_mapping$inter_ind_plot |>
     add_trace(
       data = data_surface_response,
       x = ~ dim1,
       y = ~ dim2,
       hoverinfo = 'text',
-      text = res_mapping$vec_info_tooltip,
       z = ~ prop_predict_like,
       type = "contour",
       contours = list(
@@ -168,14 +164,53 @@ perform_prefmap <- function(res_mapping,
         len = 1,
         lenmode = "fraction",
         title = "% of consumers\nwho like the product")
-    ) |> 
-    layout(
-      title = list(
-        text = "Preference mapping",
-        font = list(size = 14, color = "#444444")
-      )
     )
   
+  ## -- Add info about products
+  inter_plot_prefmap_prod <- inter_plot_prefmap_surf |>
+    add_trace(
+      data = coord_prod |>
+        mutate(product = rownames(coord_prod)),
+      x = ~ dim1 ,
+      y = ~ dim2,
+      text = ~ product,
+      textposition = "top center",
+      type = "scatter",
+      mode = "text",
+      showlegend = FALSE
+    ) |> 
+    add_trace(
+      data = coord_prod |>
+        mutate(product = rownames(coord_prod)),
+      x = ~ dim1 ,
+      y = ~ dim2,
+      hoverinfo = 'text',
+      text = res_mapping$vec_info_tooltip,
+      type = "scatter",
+      mode = "markers",
+      marker = list(size = 6, color = "black"),
+      showlegend = FALSE
+    )
+  
+  ## -- Add sensory attributes
+  coord_attr <- res_mapping$coord_attr
+  
+  inter_plot_prefmap <- inter_plot_prefmap_prod |>
+    add_trace(
+      data = coord_attr,
+      x = ~ dim1 ,
+      y = ~ dim2,
+      text = ~ attribute,
+      type = "scatter",
+      mode = "text",
+      textfont = list(color = "#828181"),
+      showlegend = FALSE, 
+      hoverinfo = "skip"
+    ) |> 
+    layout(
+      title = FALSE
+    )
+    
   return(inter_plot_prefmap)
   
 }

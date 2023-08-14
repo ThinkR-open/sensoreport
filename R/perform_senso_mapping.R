@@ -80,7 +80,7 @@ perform_senso_mapping <- function(data_sensory,
       type = "scatter",
       mode = "markers",
       marker = list(size = 6, color = "black"),
-      showlegend = TRUE
+      showlegend = FALSE
     ) |>
     layout(
       legend = list(
@@ -144,7 +144,7 @@ perform_senso_mapping <- function(data_sensory,
           text = ~ attribute,
           type = "scatter", 
           mode = "text",
-          showlegend = TRUE) |>
+          showlegend = FALSE) |>
     layout(
       legend = list(
         orientation = "h",
@@ -194,7 +194,8 @@ perform_senso_mapping <- function(data_sensory,
 
   return(
     list(
-      res_mca = res_mca,
+      coord_prod = coord_prod,
+      coord_attr = coord_attr,
       vec_info_tooltip = vec_info,
       inter_ind_plot = inter_ind_plot,
       inter_var_plot = inter_var_plot
