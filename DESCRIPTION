@@ -36,10 +36,10 @@ Imports:
     stringr,
     tibble,
     tidyr,
+    tidyselect,
     tools,
     withr
 Suggests: 
-    dbplyr,
     knitr,
     rmarkdown,
     SensoMineR,

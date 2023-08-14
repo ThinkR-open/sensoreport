@@ -2,14 +2,14 @@ flat_create_database.Rmd:
   path: dev/flat_create_database.Rmd
   state: active
   R:
-  - R/create_hedonic_table.R
-  - R/create_profiles_table.R
-  - R/create_toy_data.R
+  - R/create_hedonic_table_one_session.R
+  - R/create_sorting_data_one_session.R
+  - R/create_toy_table.R
   - R/save_data_in_db.R
   tests:
-  - tests/testthat/test-create_toy_data.R
-  - tests/testthat/test-create_profiles_table.R
-  - tests/testthat/test-create_hedonic_table.R
+  - tests/testthat/test-create_sorting_data_one_session.R
+  - tests/testthat/test-create_hedonic_table_one_session.R
+  - tests/testthat/test-create_toy_table.R
   - tests/testthat/test-save_data_in_db.R
   vignettes: []
   inflate:

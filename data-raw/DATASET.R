@@ -1,8 +1,8 @@
-## code to prepare `data_profiles_toy` dataset goes here
+## code to prepare `data_sensory_toy` dataset goes here
 
 con_db <- connect_db()
 
-data_profiles_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PROFILES")) |>
+data_sensory_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM SENSORY")) |>
   dplyr::filter(SESSION == "SESS2301" & PRODUCT %in% c("PROD1", "PROD2", "PROD3", "PROD4")) |>
   dplyr::select(-SESSION) |>
   dplyr::collect()
@@ -10,12 +10,12 @@ data_profiles_toy <- dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PROFILES")) |>
 DBI::dbDisconnect(con_db, shutdown = TRUE)
 
 usethis::use_data(
-  data_profiles_toy,
+  data_sensory_toy,
   overwrite = TRUE
 )
 
 checkhelper::use_data_doc(
-  "data_profiles_toy"
+  "data_sensory_toy"
 )
 
 ## code to prepare `data_hedonic_toy` dataset goes here
