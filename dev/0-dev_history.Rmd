@@ -17,7 +17,7 @@ fusen::fill_description(
   pkg = here::here(),
   fields = list(
     Title = "Create Reproducible Sensory Reports",
-    Description = "A Shiny app to query a database in which QDA sensory data are stored, analyse data R package and generate reproducible and interactive HTML sensory reports. Such tool can enable sensory analysts and panel leaders to spend less time preparing reports, and add more value to their work.",
+    Description = "A toy Shiny app to query a database in which sensory data are stored (sorting task), analyse data R package and generate reproducible and interactive HTML sensory reports. Such tool can enable sensory analysts and panel leaders to spend less time preparing reports, and add more value to their work.",
     `Authors@R` = c(
       person("Margot", "Brard", email = "margot@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6754-0659")),
       person(given = "ThinkR", role = "cph")

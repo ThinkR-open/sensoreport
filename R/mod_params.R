@@ -140,7 +140,7 @@ mod_params_server <- function(id, r_global){
 
         con_db <- connect_db()
 
-      all_products_in_session <- tbl(con_db, sql(glue("SELECT * FROM PROFILES WHERE SESSION IS '{input$session}'"))) |>
+      all_products_in_session <- tbl(con_db, sql(glue("SELECT * FROM SENSORY WHERE SESSION IS '{input$session}'"))) |>
         distinct(PRODUCT) |>
         pull()
 

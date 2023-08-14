@@ -28,3 +28,7 @@ h3, h4, h5, h6 {
 .nav-link .active {
   color: $font-color;
 }
+
+div.callout-warning.callout {
+  border-left-color: $toc-color;
+}

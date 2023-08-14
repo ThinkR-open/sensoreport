@@ -2,11 +2,11 @@
 
 test_that("perform_senso_mapping works", {
 
-  data("data_profiles_toy")
+  data("data_sensory_toy")
   data("data_products_toy")
   
   plots_mapping <- perform_senso_mapping(
-    data_profiles = data_profiles_toy,
+    data_sensory = data_sensory_toy,
     data_products = data_products_toy
   )
   
@@ -16,16 +16,16 @@ test_that("perform_senso_mapping works", {
   # Test an error is the parameter is not a dataframe
   expect_error(
     object = perform_senso_mapping(
-      data_profiles = data_profiles_toy,
+      data_sensory = data_sensory_toy,
       data_products = 1), 
     regexp = "The data 'data_products' you provided is not a dataframe"
   )
   
   expect_error(
     object = perform_senso_mapping(
-      data_profiles = 1,
+      data_sensory = 1,
       data_products = data_products_toy), 
-    regexp = "The data 'data_profiles' you provided is not a dataframe"
+    regexp = "The data 'data_sensory' you provided is not a dataframe"
   )
 
 })

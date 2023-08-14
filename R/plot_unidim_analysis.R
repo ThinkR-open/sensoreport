@@ -2,41 +2,46 @@
 
 #' Create the plot with the unidimensional analysis
 #' 
-#' @param data_profiles Tibble. The sensory data.
+#' @param data_sensory Tibble. The sensory data.
 #' 
 #' @importFrom ggplot2 ggplot aes geom_col labs facet_wrap theme_minimal theme element_blank scale_fill_manual
 #' @importFrom plotly ggplotly
-#' @importFrom dplyr vars distinct
+#' @importFrom dplyr vars distinct group_by count ungroup
 #' @importFrom grDevices colorRampPalette
 #' 
 #' @return A ggplotly
 #' @export
 #' @examples
-#' data("data_profiles_toy")
+#' data("data_sensory_toy")
 #'
 #' plot_unidim_analysis(
-#'   data_profiles = data_profiles_toy
+#'   data_sensory = data_sensory_toy
 #' )
-plot_unidim_analysis <- function(data_profiles) {
+plot_unidim_analysis <- function(data_sensory) {
   
   # Check parameters
-  if (isFALSE(is.data.frame(data_profiles))) {
+  if (isFALSE(is.data.frame(data_sensory))) {
     stop("The data you provided is not a dataframe.")
   }
   
   # Find de number of products
-  nb_prod <- data_profiles |> distinct(PRODUCT) |> nrow()
+  nb_prod <- data_sensory |> distinct(PRODUCT) |> nrow()
   
   # Static plot
-  unidim_plot <- ggplot(data = data_profiles) +
+  unidim_plot <- data_sensory |> 
+    group_by(PRODUCT, GROUP) |> 
+    count() |> 
+    ungroup() |> 
+    ggplot() +
     aes(x = PRODUCT,
-        y = SCORE,
+        y = n,
         fill = PRODUCT) +
     geom_col() +
     scale_fill_manual(values = colorRampPalette(c("white", "#55B4D2"))(n = nb_prod + 1)[-1]) +
     labs(x = "",
-         y = "Intensity on a 0-10 scale") +
-    facet_wrap(facets = vars(ATTRIBUTE)) +
+         y = "Number of associations", 
+         fill = "") +
+    facet_wrap(facets = vars(GROUP)) +
     theme_minimal() +
     theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank())
@@ -44,7 +49,7 @@ plot_unidim_analysis <- function(data_profiles) {
   # Interactive plot
   inter_plot <- ggplotly(
     p = unidim_plot,
-    tooltip = c("x", "y")
+    tooltip = c("y")
   )
   
   return(inter_plot)

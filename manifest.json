@@ -10,26 +10,6 @@
     "has_parameters": false
   },
   "packages": {
-    "AlgDesign": {
-      "Source": "CRAN",
-      "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
-      "description": {
-        "Package": "AlgDesign",
-        "Version": "1.2.1",
-        "Title": "Algorithmic Experimental Design",
-        "Author": "Bob Wheeler <bwheelerg@gmail.com>",
-        "Maintainer": "Jerome Braun <jvbraun.statistics@gmail.com>",
-        "Description": "Algorithmic experimental designs. Calculates exact and\n        approximate theory experimental designs for D,A, and I\n        criteria. Very large designs may be created. Experimental\n        designs may be blocked or blocked designs created from a\n        candidate list, using several criteria.  The blocking can be\n        done when whole and within plot factors interact.",
-        "License": "GPL (>= 2)",
-        "URL": "https://github.com/jvbraun/AlgDesign",
-        "Packaged": "2022-05-24 06:04:45 UTC; Jerome",
-        "Repository": "RSPM",
-        "Date/Publication": "2022-05-25 07:30:19 UTC",
-        "NeedsCompilation": "yes",
-        "Encoding": "UTF-8",
-        "Built": "R 4.2.2; x86_64-pc-linux-gnu; 2023-06-29 13:05:43 UTC; unix"
-      }
-    },
     "DBI": {
       "Source": "CRAN",
       "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
@@ -112,31 +92,6 @@
         "Repository": "RSPM",
         "Date/Publication": "2022-12-14 16:50:06 UTC",
         "Built": "R 4.2.2; x86_64-pc-linux-gnu; 2023-04-13 10:16:41 UTC; unix"
-      }
-    },
-    "KernSmooth": {
-      "Source": "CRAN",
-      "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
-      "description": {
-        "Package": "KernSmooth",
-        "Priority": "recommended",
-        "Version": "2.23-20",
-        "Date": "2021-05-03",
-        "Title": "Functions for Kernel Smoothing Supporting Wand & Jones (1995)",
-        "Authors@R": "c(person(\"Matt\", \"Wand\", role = \"aut\",\n\t             email = \"Matt.Wand@uts.edu.au\"),\n\t     person(\"Cleve\", \"Moler\", role = \"ctb\",\n\t            comment = \"LINPACK routines in src/d*\"),\n             person(\"Brian\", \"Ripley\", role = c(\"trl\", \"cre\", \"ctb\"),\n                    email = \"ripley@stats.ox.ac.uk\",\n\t\t    comment = \"R port and updates\"))",
-        "Note": "Maintainers are not available to give advice on using a package\nthey did not author.",
-        "Depends": "R (>= 2.5.0), stats",
-        "Suggests": "MASS, carData",
-        "Description": "Functions for kernel smoothing (and density estimation)\n  corresponding to the book: \n  Wand, M.P. and Jones, M.C. (1995) \"Kernel Smoothing\".",
-        "License": "Unlimited",
-        "ByteCompile": "yes",
-        "NeedsCompilation": "yes",
-        "Packaged": "2021-05-03 08:46:19 UTC; ripley",
-        "Author": "Matt Wand [aut],\n  Cleve Moler [ctb] (LINPACK routines in src/d*),\n  Brian Ripley [trl, cre, ctb] (R port and updates)",
-        "Maintainer": "Brian Ripley <ripley@stats.ox.ac.uk>",
-        "Repository": "CRAN",
-        "Date/Publication": "2021-05-03 14:06:33 UTC",
-        "Built": "R 4.2.2; x86_64-pc-linux-gnu; 2022-10-31 09:07:53 UTC; unix"
       }
     },
     "MASS": {
@@ -360,29 +315,6 @@
         "Date/Publication": "2022-11-05 21:50:02 UTC",
         "Encoding": "UTF-8",
         "Built": "R 4.2.2; x86_64-pc-linux-gnu; 2023-04-13 08:09:33 UTC; unix"
-      }
-    },
-    "SensoMineR": {
-      "Source": "CRAN",
-      "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
-      "description": {
-        "Package": "SensoMineR",
-        "Version": "1.26",
-        "Date": "2020-05-19",
-        "Title": "Sensory Data Analysis",
-        "Author": "Francois Husson, Sebastien Le, Marine Cadoret",
-        "Maintainer": "Francois Husson <husson@agrocampus-ouest.fr>",
-        "Depends": "R (>= 3.0), FactoMineR (>= 2.3)",
-        "Imports": "cluster,KernSmooth,ggplot2,reshape2,AlgDesign,gtools,ggrepel",
-        "Description": "Statistical Methods to Analyse Sensory Data. SensoMineR: A package for sensory data analysis. S. Le and F. Husson (2008) <DOI:10.1111/j.1745-459X.2007.00137.x>.",
-        "License": "GPL (>= 2)",
-        "URL": "http://sensominer.free.fr",
-        "Encoding": "latin1",
-        "NeedsCompilation": "no",
-        "Packaged": "2020-05-19 14:13:33 UTC; husson",
-        "Repository": "RSPM",
-        "Date/Publication": "2020-05-19 14:50:03 UTC",
-        "Built": "R 4.2.2; ; 2023-06-29 13:05:48 UTC; unix"
       }
     },
     "SparseM": {
@@ -1930,32 +1862,6 @@
         "Built": "R 4.2.2; ; 2023-03-29 13:29:40 UTC; unix"
       }
     },
-    "gtools": {
-      "Source": "CRAN",
-      "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
-      "description": {
-        "Package": "gtools",
-        "Title": "Various R Programming Tools",
-        "Description": "Functions to assist in R programming, including:\n  - assist in developing, updating, and maintaining R and R packages ('ask', 'checkRVersion',\n    'getDependencies', 'keywords', 'scat'),\n  - calculate the logit and inverse logit transformations ('logit', 'inv.logit'),\n  - test if a value is missing, empty or contains only NA and NULL values ('invalid'),\n  - manipulate R's .Last function ('addLast'),\n  - define macros ('defmacro'),\n  - detect odd and even integers ('odd', 'even'),\n  - convert strings containing non-ASCII characters (like single quotes) to plain ASCII ('ASCIIfy'),\n  - perform a binary search ('binsearch'),\n  - sort strings containing both numeric and character components ('mixedsort'),\n  - create a factor variable from the quantiles of a continuous variable ('quantcut'),\n  - enumerate permutations and combinations ('combinations', 'permutation'),\n  - calculate and convert between fold-change and log-ratio ('foldchange',\n    'logratio2foldchange', 'foldchange2logratio'),\n  - calculate probabilities and generate random numbers from Dirichlet distributions\n    ('rdirichlet', 'ddirichlet'),\n  - apply a function over adjacent subsets of a vector ('running'),\n  - modify the TCP_NODELAY ('de-Nagle') flag for socket objects,\n  - efficient 'rbind' of data frames, even if the column names don't match ('smartbind'),\n  - generate significance stars from p-values ('stars.pval'),\n  - convert characters to/from ASCII codes ('asc', 'chr'),\n  - convert character vector to ASCII representation ('ASCIIfy'),\n  - apply title capitalization rules to a character vector ('capwords').",
-        "Version": "3.9.4",
-        "Authors@R": "c(person(\"Ben\",\"Bolker\", role=c(\"aut\", \"cre\"),\n                     email = \"bolker@mcmaster.ca\",\n\t\t\t\t    comment=c(ORCID=\"0000-0002-2127-0443\")),\n\t     person(\"Gregory R.\", \"Warnes\", role = \"aut\"),\t\n\t     person(\"Thomas\", \"Lumley\", role = \"aut\"))",
-        "License": "GPL-2",
-        "Depends": "methods, stats, utils",
-        "URL": "https://github.com/r-gregmisc/gtools",
-        "BugReports": "https://github.com/r-gregmisc/gtools/issues",
-        "Language": "en-US",
-        "Suggests": "car, gplots, knitr, rstudioapi, SGP, taxize",
-        "RoxygenNote": "7.2.2",
-        "Encoding": "UTF-8",
-        "NeedsCompilation": "yes",
-        "Packaged": "2022-11-25 18:52:42 UTC; bolker",
-        "Author": "Ben Bolker [aut, cre] (<https://orcid.org/0000-0002-2127-0443>),\n  Gregory R. Warnes [aut],\n  Thomas Lumley [aut]",
-        "Maintainer": "Ben Bolker <bolker@mcmaster.ca>",
-        "Repository": "RSPM",
-        "Date/Publication": "2022-11-27 22:00:02 UTC",
-        "Built": "R 4.2.2; x86_64-pc-linux-gnu; 2023-04-13 07:39:59 UTC; unix"
-      }
-    },
     "here": {
       "Source": "CRAN",
       "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
@@ -2976,34 +2882,6 @@
         "Built": "R 4.2.2; ; 2023-04-13 09:41:48 UTC; unix"
       }
     },
-    "plyr": {
-      "Source": "CRAN",
-      "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
-      "description": {
-        "Package": "plyr",
-        "Title": "Tools for Splitting, Applying and Combining Data",
-        "Version": "1.8.8",
-        "Authors@R": "\n    person(\"Hadley\", \"Wickham\", , \"hadley@rstudio.com\", role = c(\"aut\", \"cre\"))",
-        "Description": "A set of tools that solves a common set of problems: you need\n    to break a big problem down into manageable pieces, operate on each\n    piece and then put all the pieces back together.  For example, you\n    might want to fit a model to each spatial location or time point in\n    your study, summarise data by panels or collapse high-dimensional\n    arrays to simpler summary statistics. The development of 'plyr' has\n    been generously supported by 'Becton Dickinson'.",
-        "License": "MIT + file LICENSE",
-        "URL": "http://had.co.nz/plyr, https://github.com/hadley/plyr",
-        "BugReports": "https://github.com/hadley/plyr/issues",
-        "Depends": "R (>= 3.1.0)",
-        "Imports": "Rcpp (>= 0.11.0)",
-        "Suggests": "abind, covr, doParallel, foreach, iterators, itertools,\ntcltk, testthat",
-        "LinkingTo": "Rcpp",
-        "Encoding": "UTF-8",
-        "LazyData": "true",
-        "RoxygenNote": "7.2.1",
-        "NeedsCompilation": "yes",
-        "Packaged": "2022-11-11 16:45:00 UTC; hadleywickham",
-        "Author": "Hadley Wickham [aut, cre]",
-        "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
-        "Repository": "RSPM",
-        "Date/Publication": "2022-11-11 20:50:02 UTC",
-        "Built": "R 4.2.2; x86_64-pc-linux-gnu; 2023-04-13 08:01:46 UTC; unix"
-      }
-    },
     "praise": {
       "Source": "CRAN",
       "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
@@ -3251,33 +3129,6 @@
         "Repository": "RSPM",
         "Date/Publication": "2020-05-01 06:50:02 UTC",
         "Built": "R 4.2.2; ; 2023-03-29 13:41:27 UTC; unix"
-      }
-    },
-    "reshape2": {
-      "Source": "CRAN",
-      "Repository": "https://ppm.thinkr.fr/prod-cran/2023-02-10",
-      "description": {
-        "Package": "reshape2",
-        "Title": "Flexibly Reshape Data: A Reboot of the Reshape Package",
-        "Version": "1.4.4",
-        "Author": "Hadley Wickham <h.wickham@gmail.com>",
-        "Maintainer": "Hadley Wickham <h.wickham@gmail.com>",
-        "Description": "Flexibly restructure and aggregate data using just two\n    functions: melt and 'dcast' (or 'acast').",
-        "License": "MIT + file LICENSE",
-        "URL": "https://github.com/hadley/reshape",
-        "BugReports": "https://github.com/hadley/reshape/issues",
-        "Depends": "R (>= 3.1)",
-        "Imports": "plyr (>= 1.8.1), Rcpp, stringr",
-        "Suggests": "covr, lattice, testthat (>= 0.8.0)",
-        "LinkingTo": "Rcpp",
-        "Encoding": "UTF-8",
-        "LazyData": "true",
-        "RoxygenNote": "7.1.0",
-        "NeedsCompilation": "yes",
-        "Packaged": "2020-04-09 12:27:19 UTC; hadley",
-        "Repository": "RSPM",
-        "Date/Publication": "2020-04-09 13:50:02 UTC",
-        "Built": "R 4.2.2; x86_64-pc-linux-gnu; 2023-04-13 09:00:04 UTC; unix"
       }
     },
     "rlang": {
@@ -4193,25 +4044,25 @@
       "checksum": "9adf76ccd09b8efbdb2ef26d43468fd1"
     },
     "data/data_coord_real_toy.rda": {
-      "checksum": "6ef71f2a97ac1ebd7f0752ba0c57545a"
+      "checksum": "ba42fee9c7fb803915df1710beccf825"
     },
     "data/data_grid_toy.rda": {
-      "checksum": "464ad4671ae8a50abb8db5cc40dc5996"
+      "checksum": "d0ab4a5eadb52a3bfceac15457d80eca"
     },
     "data/data_hedonic_toy.rda": {
-      "checksum": "74c6742668851d22541bc1f2b6913e9f"
+      "checksum": "95d193cfbf0e4290f9491dccd60cceb9"
     },
     "data/data_products_toy.rda": {
       "checksum": "3408431f5b96b53f9928323053da018f"
     },
-    "data/data_profiles_toy.rda": {
-      "checksum": "150ce91c118d94430528561f169dbd3d"
+    "data/data_sensory_toy.rda": {
+      "checksum": "d0495649709adbe3a7cdb3466d8aadf4"
     },
     "data/data_sessions_toy.rda": {
       "checksum": "72d4e01d58c3066bdfb964da2c78618a"
     },
     "DESCRIPTION": {
-      "checksum": "abe40f3d230de204ad59a4cfc7a6c1df"
+      "checksum": "35e63d3298f3e3cdb63363fc6d6d0367"
     },
     "inst/app/www/custom.sass": {
       "checksum": "5a588c338161d1d49b1ac408bd253dda"
@@ -4226,28 +4077,28 @@
       "checksum": "9232295ff08353796be701b9325d9963"
     },
     "inst/database/sensory_db.sqlite": {
-      "checksum": "8ebefc7b6d95825e6ea00d66e0d65131"
+      "checksum": "5c2077c997bd2c5b8ff8de2223885e02"
     },
     "inst/golem-config.yml": {
       "checksum": "5caa749d61bd682e5f6b3844272303e4"
     },
     "inst/report/custom.scss": {
-      "checksum": "1b7207e164eb6544165777e3a574d0bd"
+      "checksum": "49e895c8f5caf4ca1167e40d58002245"
     },
     "inst/report/report_template.html": {
-      "checksum": "619bdb6e8393f175ac58c72d84aabf57"
+      "checksum": "30f5f9ba4fd3ffdaed84bbcfbb7cc7c7"
     },
     "inst/report/report_template.qmd": {
-      "checksum": "1f2ef9586bf65913174cdcb3a66a87ce"
+      "checksum": "e8e97a233dbc40e31b174c85f5744ef5"
     },
     "LICENSE": {
-      "checksum": "a7b8c497928e7f82c87ac4ebdcc54b06"
+      "checksum": "20589003d2e92a5b0a1ae7d81a49948b"
     },
     "LICENSE.md": {
-      "checksum": "533c27425e7b1bc0c09b7713f8220f0e"
+      "checksum": "e191d655ea02baafa07b98556e2fef29"
     },
     "man/connect_db.Rd": {
-      "checksum": "7064bc28122e09011210360351438536"
+      "checksum": "85795cbd4ae64f273c08b6a25303c04a"
     },
     "man/create_report.Rd": {
       "checksum": "68b6143dfe8629d415d5b21d87d881d0"
@@ -4256,16 +4107,16 @@
       "checksum": "a42b21453885475632aba0f2c1b73a11"
     },
     "man/data_grid_toy.Rd": {
-      "checksum": "cc5b1b4a1054245dd57cf61434800797"
+      "checksum": "52cff2715d1ce001cb3335a9a336ce4a"
     },
     "man/data_hedonic_toy.Rd": {
-      "checksum": "fbc3b8e8bf0bb03d7b28e9179939dd71"
+      "checksum": "4176a70227099b450f8aaedcb6c921a2"
     },
     "man/data_products_toy.Rd": {
       "checksum": "73b78c037ebd1b635606d81089a76f3a"
     },
-    "man/data_profiles_toy.Rd": {
-      "checksum": "9c35ce24688c7c3383da6646557bd3b4"
+    "man/data_sensory_toy.Rd": {
+      "checksum": "73a1d2cb6b54f909aad272e387f7672d"
     },
     "man/data_sessions_toy.Rd": {
       "checksum": "273787e7db96b6ff75b5993c7168e5a3"
@@ -4283,22 +4134,25 @@
       "checksum": "24bbaeaa90ac36cdc7bdcb5d357075d5"
     },
     "man/perform_prefmap.Rd": {
-      "checksum": "a6fecc43e8945312cf2e5bbee6736bfa"
+      "checksum": "1cd6658d0539e4b24861d263ececb388"
     },
     "man/perform_senso_mapping.Rd": {
-      "checksum": "7761f4ffd5e69e4ac548e32f4ff0dd00"
+      "checksum": "ddf9047a0c3b9721134b1a4efa933967"
     },
     "man/plot_unidim_analysis.Rd": {
-      "checksum": "7da2e1268c238485440c338fce5ddc3b"
+      "checksum": "5eb31d3145784c9b3e29e4a38b96ba83"
     },
     "man/run_app.Rd": {
       "checksum": "634c12f88fd618bdc1780d585c8102b7"
     },
     "man/sensoreport-package.Rd": {
-      "checksum": "150707cb11f3ff3262d4f5608037add3"
+      "checksum": "f5777adaa152c8910da157609339c33d"
+    },
+    "manifest.json": {
+      "checksum": "a094348fc86ae9a5badc43d90aed6719"
     },
     "NAMESPACE": {
-      "checksum": "c96b19f9daed3f6fd1ed75e47b6aee7f"
+      "checksum": "1993cdf0055c2299da67a5a41d2579c6"
     },
     "NEWS.md": {
       "checksum": "0c5c15452129ef52375920265bf7a2f8"
@@ -4319,40 +4173,40 @@
       "checksum": "da8c03dd433efe296bbb440fbe361be6"
     },
     "R/connect_db.R": {
-      "checksum": "6067847f1502690bcf8c1ba8951bb6e0"
+      "checksum": "247d9614aaf552ceee81faceb58621f5"
     },
-    "R/create_hedonic_table.R": {
-      "checksum": "880d5f8334ef38615e5f40e22e463978"
-    },
-    "R/create_profiles_table.R": {
-      "checksum": "3dcd85a91a6bca7d37a64a1db8909567"
+    "R/create_hedonic_table_one_session.R": {
+      "checksum": "95fb718a17052e9e56a290ebee6a6c7d"
     },
     "R/create_report.R": {
       "checksum": "3b5be80a7ef7a536762dd4dcf1645e3d"
     },
-    "R/create_toy_data.R": {
-      "checksum": "eb2edc9bef0a105d2b94d1f0c5f9594c"
+    "R/create_sorting_data_one_session.R": {
+      "checksum": "f1a27e890b740de6305371aae3532bb7"
+    },
+    "R/create_toy_table.R": {
+      "checksum": "3b960a1f14d539425c922c18cb86e06f"
     },
     "R/doc_data_coord_real_toy.R": {
       "checksum": "22ac2518460436b1b4795f32bd78bc26"
     },
     "R/doc_data_grid_toy.R": {
-      "checksum": "4b630a35129b861b0efdbf48b56512e6"
+      "checksum": "4240f6088519edf33a8ba8ca12e7a4b4"
     },
     "R/doc_data_hedonic_toy.R": {
-      "checksum": "d767221753eab5dede9c975836a60f15"
+      "checksum": "397abae6c95584f9c8f61869b5c63aef"
     },
     "R/doc_data_products_toy.R": {
       "checksum": "3d3e45c2f79853dd36ef57b6af41552b"
     },
-    "R/doc_data_profiles_toy.R": {
-      "checksum": "98b5f2dd22fd9f1a51df09e9209750ca"
+    "R/doc_data_sensory_toy.R": {
+      "checksum": "e50e7326955abe2eb378eacb9b07daf3"
     },
     "R/doc_data_sessions_toy.R": {
       "checksum": "68c5b1731ae2b494b8b5e07f9e1a685d"
     },
     "R/globals.R": {
-      "checksum": "24224312cf2318610839af329f1a4ef7"
+      "checksum": "8fb0fceb94874d01b5175490b8921747"
     },
     "R/golem_utils_server.R": {
       "checksum": "c2998ee5dbb57c9af79904bc79133f74"
@@ -4364,19 +4218,19 @@
       "checksum": "8d41cd7bcfa9467ea3510d18b105c68e"
     },
     "R/mod_params.R": {
-      "checksum": "7022fc6d513cd36c762a8c6d2daaa00c"
+      "checksum": "0e94e65952d1e0d429bf1070dbf6bce3"
     },
     "R/mod_report.R": {
       "checksum": "ac4b9dfecc092f953177eb7229c2987a"
     },
     "R/perform_prefmap.R": {
-      "checksum": "7cda42be1b2434ceab0d135a6ce2fe13"
+      "checksum": "636227bb132845685b76b5312e9f4cb6"
     },
     "R/perform_senso_mapping.R": {
-      "checksum": "1ff1dfbeab4f545262a201eff69b110e"
+      "checksum": "fad68114d92d7adb802ead1f67dd7f18"
     },
     "R/plot_unidim_analysis.R": {
-      "checksum": "7f6ae733c697d97c243c53bf250acf0b"
+      "checksum": "303a6fdf9f1bd2aff9c2d87546225b8d"
     },
     "R/predict_like.R": {
       "checksum": "f64a11c2f2451cebeafd1ae36bd625a5"
@@ -4397,7 +4251,7 @@
       "checksum": "b0a95fdaa894808a8abaf7b0b681e7df"
     },
     "rsconnect/documents/app.R/connect/margot/sensoreport.dcf": {
-      "checksum": "021bda2606a13d547066f27cea743051"
+      "checksum": "dbbae87f56eb31366ff757c8ce96b2fe"
     },
     "rsconnect/documents/app.R/connect/margot/testsensoreport.dcf": {
       "checksum": "2562edc96f9d1800225916e4aee380d4"
@@ -4406,7 +4260,7 @@
       "checksum": "0e47ab567212935c87c0cebbd02b78c1"
     },
     "tests/testthat.R": {
-      "checksum": "844e4404fc721c1a7d227adc627bef8a"
+      "checksum": "dc3871ae59f4004e2ac46819c1bcf401"
     },
     "tests/testthat/_snaps/accordion_item.md": {
       "checksum": "5061ae35a6b14c8521c7c9b8ff305c94"
@@ -4421,19 +4275,19 @@
       "checksum": "acedd3f32d711ed9325ecf2f0d11eb97"
     },
     "tests/testthat/test-connect_db.R": {
-      "checksum": "9d65eeeb44cf856d77b9e73238b52719"
+      "checksum": "23c96287269ec0c06743689d0e898bf7"
     },
-    "tests/testthat/test-create_hedonic_table.R": {
-      "checksum": "74f12462ab67aaebc69607e1ccf52a77"
-    },
-    "tests/testthat/test-create_profiles_table.R": {
-      "checksum": "74f12462ab67aaebc69607e1ccf52a77"
+    "tests/testthat/test-create_hedonic_table_one_session.R": {
+      "checksum": "8d95c0e59150df401601102d903aa35d"
     },
     "tests/testthat/test-create_report.R": {
       "checksum": "32639bc634cf9c0e0aee95086e46416e"
     },
-    "tests/testthat/test-create_toy_data.R": {
-      "checksum": "16ca354360bc8f0cb4bd648a8159d6b5"
+    "tests/testthat/test-create_sorting_data_one_session.R": {
+      "checksum": "a1b11fee95c6cd2468ffeccf085a988b"
+    },
+    "tests/testthat/test-create_toy_table.R": {
+      "checksum": "d0e5a0ad9e2b6bd5a284f2551d3f6de5"
     },
     "tests/testthat/test-golem_utils_server.R": {
       "checksum": "3ed6ce54be2b28b9455f84914c16012a"
@@ -4442,13 +4296,13 @@
       "checksum": "2ef87c1229b3c6053ff45e236349c70f"
     },
     "tests/testthat/test-perform_prefmap.R": {
-      "checksum": "4fd9f801ffa020801030451b9db4af73"
+      "checksum": "607ce0f4de0df40e412b204ab2aa1d30"
     },
     "tests/testthat/test-perform_senso_mapping.R": {
-      "checksum": "faca5898d5ecffc2bf7b8573c3c443d8"
+      "checksum": "0226a61e49843973b0fec914c2da5231"
     },
     "tests/testthat/test-plot_unidim_analysis.R": {
-      "checksum": "41bd05b8e33d9a61280cfbfbc86a3bd3"
+      "checksum": "18e700405b314dcd06037ac9320d1ed2"
     },
     "tests/testthat/test-predict_like.R": {
       "checksum": "f15da7204ebc936b2fbf612acfbedf69"
@@ -4457,16 +4311,16 @@
       "checksum": "731ae99d83b468b00f7e4bcc6d370b0f"
     },
     "vignettes/a-query-the-database.Rmd": {
-      "checksum": "0bc16db9c20d42704e2802961567cc5d"
+      "checksum": "6ed4fd9964d35ce7523f7bf6685f8bf3"
     },
     "vignettes/b-perform-the-unidimensional-sensory-analysis.Rmd": {
-      "checksum": "0a51860a7493fce1459a0329bec7493c"
+      "checksum": "2c13cb8666ccacc3d22a3936bf3ae041"
     },
     "vignettes/c-perform-the-multidimensional-sensory-analysis--mapping-.Rmd": {
-      "checksum": "7f1643e5487b55c274c05447d1a44026"
+      "checksum": "2b62ce011492fae2b6ec9629b1102908"
     },
     "vignettes/d-perform-the-preference-mapping.Rmd": {
-      "checksum": "a76df9c2c59e412de44d250773da9016"
+      "checksum": "cd477791f4826003bbaf71150c9779c0"
     },
     "vignettes/e-create-the-sensory-report.Rmd": {
       "checksum": "d78b64860dc001144c851f051f9dd0a6"

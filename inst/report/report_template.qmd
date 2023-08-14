@@ -1,7 +1,7 @@
 ---
 title: "Sensory report"
 subtitle: "This is a toy report, generated with the R package {sensoreport}"
-description: "https://github.com/ThinkR-open/sensoreport"
+description: "Code available on GitHub: https://github.com/ThinkR-open/sensoreport"
 title-block-banner: "#55B4D2"
 format:
   html:
@@ -59,14 +59,19 @@ data_products <- tbl(con_db, "PRODUCTS") |>
 
 nb_products <- nrow(data_products)
 
-# Query the sensory profiles
-data_profiles <- tbl(con_db, "PROFILES") |> 
+# Query the sensory data (sorting task)
+data_sensory <- tbl(con_db, "SENSORY") |> 
   filter(SESSION == session & PRODUCT %in% products) |> 
   select(-SESSION) |> 
   collect()
 
-nb_attributes <- data_profiles |> 
-  distinct(ATTRIBUTE) |> 
+nb_consumers_senso <- data_sensory |> 
+  distinct(CONSUMER) |> 
+  count() |> 
+  pull()
+
+nb_attributes <- data_sensory |> 
+  distinct(GROUP) |> 
   count() |> 
   pull()
   
@@ -76,11 +81,18 @@ data_hedonic <- tbl(con_db, "HEDONIC") |>
   select(-SESSION) |> 
   collect()
 
-nb_consumers <- data_hedonic |> 
+nb_consumers_hedo <- data_hedonic |> 
   distinct(CONSUMER) |> 
   count() |> 
   pull()
 ```
+
+::: {.callout-warning appearance="simple"}
+
+## Pay Attention - Data
+
+*Note that fictive sensory data (sorting task in pre-defined groups) and hedonic data are used. They are only used for demonstration purposes.*
+:::
 
 |                             |     |                            |
 |:----------------------------|-----|:---------------------------|
@@ -92,7 +104,8 @@ General information about the study:
 
 -   **Number of products**: `r nb_products`
 -   **Number of sensory attributes**: `r nb_attributes`
--   **Number of consumers who provided liking data**: `r nb_consumers`
+-   **Number of consumers who assessed the products through a sorting task**: `r nb_consumers_senso`
+-   **Number of consumers who provided liking data**: `r nb_consumers_hedo`
 
 ## Products
 
@@ -104,7 +117,7 @@ data_products |>
 
 ## Sensory analysis
 
-### Intensity of each sensory attribute by products
+### Association between products and sensory attributes
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in eleifend enim, ut faucibus odio. Nunc non magna non diam lacinia aliquet. Aliquam id semper urna, in aliquet magna. Duis cursus posuere diam, sit amet dignissim felis placerat sed. Pellentesque ut tempus nibh. Nunc ac elementum dolor. Interdum et malesuada fames ac ante ipsum primis in faucibus.
 
@@ -113,39 +126,9 @@ Nunc sit amet nisi ut libero posuere vestibulum. Nullam rhoncus mauris et eros c
 ```{r}
 #| echo: false
 plot_unidim_analysis(
-  data = data_profiles
+  data = data_sensory
 )
 ```
-
-### Sensory mapping
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in eleifend enim, ut faucibus odio. Nunc non magna non diam lacinia aliquet. Aliquam id semper urna, in aliquet magna. Duis cursus posuere diam, sit amet dignissim felis placerat sed. Pellentesque ut tempus nibh. Nunc ac elementum dolor. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-
-Nunc sit amet nisi ut libero posuere vestibulum. Nullam rhoncus mauris et eros congue condimentum. Aenean nibh dolor, luctus gravida bibendum eget, fringilla vitae diam. Suspendisse ullamcorper tortor eget felis fringilla, quis laoreet metus gravida. Curabitur sed nulla mattis, interdum lacus condimentum, sodales tortor. Nunc pellentesque vitae sem pharetra efficitur. Aliquam nec est non odio varius mattis. Ut auctor nisi eget posuere tempor. Sed a facilisis tellus, eget tincidunt arcu.
-
-```{r}
-#| include: false
-res_mapping <- perform_senso_mapping(
-    data_profiles = data_profiles,
-    data_products = data_products
-  )
-```
-
-::: columns
-::: {.column width="40%"}
-```{r}
-#| echo: false
-res_mapping$inter_ind_plot
-```
-:::
-
-::: {.column width="60%"}
-```{r}
-#| echo: false
-res_mapping$inter_var_plot
-```
-:::
-:::
 
 ## Preference mapping
 
@@ -155,6 +138,11 @@ Nunc sit amet nisi ut libero posuere vestibulum. Nullam rhoncus mauris et eros c
 
 ```{r}
 #| echo: false
+res_mapping <- perform_senso_mapping(
+  data_sensory = data_sensory,
+  data_products = data_products
+)
+
 perform_prefmap(
   res_mapping = res_mapping,
   data_hedonic = data_hedonic
@@ -167,8 +155,7 @@ perform_prefmap(
 
 ```{r}
 #| echo: false
-data_profiles |>
-  mutate(SCORE = round(SCORE, 1)) |>
+data_sensory |>
   DT::datatable()
 ```
 
@@ -177,7 +164,6 @@ data_profiles |>
 ```{r}
 #| echo: false
 data_hedonic |>
-  mutate(SCORE = round(SCORE, 1)) |>
   DT::datatable()
 ```
 

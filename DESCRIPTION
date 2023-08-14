@@ -1,16 +1,16 @@
 Package: sensoreport
 Title: Create Reproducible Sensory Reports
-Version: 1.0.0
+Version: 0.0.0.9000
 Authors@R: c(
     person("Margot", "Brard", , "margot@thinkr.fr", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-6754-0659")),
     person("ThinkR", role = "cph")
   )
-Description: A Shiny app to query a database in which QDA sensory data are
-    stored, analyse data R package and generate reproducible and
-    interactive HTML sensory reports. Such tool can enable sensory
-    analysts and panel leaders to spend less time preparing reports, and
-    add more value to their work.
+Description: A toy Shiny app to query a database in which sensory data are
+    stored (sorting task), analyse data R package and generate
+    reproducible and interactive HTML sensory reports. Such tool can
+    enable sensory analysts and panel leaders to spend less time preparing
+    reports, and add more value to their work.
 License: MIT + file LICENSE
 Depends: 
     R (>= 2.10)
@@ -36,18 +36,17 @@ Imports:
     stringr,
     tibble,
     tidyr,
+    tidyselect,
     tools,
     withr
 Suggests: 
     dbplyr,
     knitr,
     rmarkdown,
-    SensoMineR,
     testthat
 VignetteBuilder: 
     knitr
 Config/fusen/version: 0.5.1
-Config/Needs/website: ThinkR-open/thinkrtemplate
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

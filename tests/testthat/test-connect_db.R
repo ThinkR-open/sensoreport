@@ -7,7 +7,7 @@ test_that("query_database works", {
   # List tables in the sensory database
   expect_equal(
     object = DBI::dbListTables(con_db), 
-    expected = c("HEDONIC", "PRODUCTS", "PROFILES", "SESSIONS")
+    expected = c("HEDONIC", "PRODUCTS", "SENSORY", "SESSIONS")
   )
   
   # Disconnect

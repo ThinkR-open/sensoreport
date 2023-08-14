@@ -23,8 +23,8 @@ con_db <- connect_db()
 # List tables in the sensory database
 DBI::dbListTables(con_db)
 
-# Read the sensory profiles
-dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PROFILES LIMIT 10"))
+# Read the sensory data
+dplyr::tbl(con_db, dplyr::sql("SELECT * FROM SENSORY LIMIT 10"))
 
 # Read the hedonic data
 dplyr::tbl(con_db, dplyr::sql("SELECT * FROM HEDONIC LIMIT 10"))

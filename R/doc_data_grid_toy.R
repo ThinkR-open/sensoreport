@@ -2,7 +2,7 @@
 #'
 #' Description.
 #'
-#' @format A data frame with 34476 rows and 3 variables:
+#' @format A data frame with 46852 rows and 3 variables:
 #' \describe{
 #'   \item{ dim1 }{  numeric }
 #'   \item{ dim2 }{  numeric }

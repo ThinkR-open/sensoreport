@@ -24,7 +24,7 @@ library(sensoreport)
 
 With `perform_prefmap()`, you can perform the preference mapping.
 
-This is based on the results of the PCA provided by the `perform_senso_mapping()` function (see vignette *c - Perform the multidimensional sensory analysis (mapping)* for more details). 
+This is based on the results of the MCA provided by the `perform_senso_mapping()` function (see vignette *c - Perform the multidimensional sensory analysis (mapping)* for more details). 
 
 The graph of individuals (i.e. products) is discretized to form a grid of fictitious products. For each `x` * `y` coordinate of these fictitious products, the liking score is predicted for each panelist. A linear regression model `liking ~ coordinate dim 1 + coordinate dim 2 + coordinate dim 1 * coordinate dim 2` is used to predict the liking score for each panelist. 
 
@@ -34,16 +34,18 @@ This graph is displayed in an interactive format.
 
 
 ```{r examples-perform_prefmap}
+data("data_sensory_toy")
+data("data_products_toy")
 data("data_hedonic_toy")
 
 res_mapping <- perform_senso_mapping(
-  data_profiles = data_profiles_toy,
+  data_sensory = data_sensory_toy,
   data_products = data_products_toy
 )
 
 perform_prefmap(
-  res_mapping,
-  data_hedonic_toy
+  res_mapping = res_mapping,
+  data_hedonic = data_hedonic_toy
 )
 ```
 

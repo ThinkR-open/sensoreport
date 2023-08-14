@@ -9,6 +9,9 @@ editor_options:
 library(testthat)
 library(tidyr)
 library(FactoMineR)
+library(glue)
+library(stringr)
+library(plotly)
 ```
 
 ```{r development-load}
@@ -16,32 +19,32 @@ library(FactoMineR)
 pkgload::load_all(export_all = FALSE)
 ```
 
-# `perform_senso_mapping()`: Transform the sensory data to a large format and perform a PCA
+# `perform_senso_mapping()`: Transform the sensory data to a large format and perform a MCA
 
-With `perform_senso_mapping()`, you can perform the multidimensional analysis of sensory profiles. In practice, a Principal Component Analysis is realized. The graph of individuals (i.e. products) and the graph of variables (i.e. sensory attributes) are displayed in an interactive format.
+With `perform_senso_mapping()`, you can perform the multidimensional analysis of sensory data. In practice, a Multiple Correspondence Analysis is realized (adapted for sorting task data). The graph of individuals (i.e. products) and the graph of attributes are displayed in an interactive format.
 
 ```{r function-perform_senso_mapping}
-#' Transform the sensory data to a large format and perform a PCA
+#' Transform the sensory data to a large format and perform a MCA
 #'
-#' @param data_profiles Tibble. Table with the sensory data.
+#' @param data_sensory Tibble. Table with the sensory data.
 #' @param data_products Tibble. Table with the info about products.
-#' @param ... Other parameters of the FactoMineR::PCA() function.
+#' @param ... Other parameters of the FactoMineR::MCA() function.
 #'
 #' @importFrom tidyr pivot_wider
-#' @importFrom dplyr arrange filter mutate pull
-#' @importFrom FactoMineR PCA
+#' @importFrom dplyr arrange filter mutate pull group_by ungroup summarise
+#' @importFrom FactoMineR MCA
 #' @importFrom glue glue
 #' @importFrom plotly plot_ly add_trace layout add_annotations
 #' 
-#' @return A list of 2 plotly graphs: the PCA ind plot and the PCA var plot
+#' @return A list of 2 plotly graphs: the MCA ind plot and the MCA attributes
 #' @export
-perform_senso_mapping <- function(data_profiles,
+perform_senso_mapping <- function(data_sensory,
                                   data_products, 
                                   ...) {
   
   # Check parameters
-  if (isFALSE(is.data.frame(data_profiles))) {
-    stop("The data 'data_profiles' you provided is not a dataframe.")
+  if (isFALSE(is.data.frame(data_sensory))) {
+    stop("The data 'data_sensory' you provided is not a dataframe.")
   }
   
   if (isFALSE(is.data.frame(data_products))) {
@@ -49,10 +52,10 @@ perform_senso_mapping <- function(data_profiles,
   }
   
   # Transform data to a PROD x ATTRIBUTE table
-  data_large <- data_profiles |>
+  data_large <- data_sensory |>
     pivot_wider(
-      names_from = "ATTRIBUTE", 
-      values_from = "SCORE"
+      names_from = "CONSUMER", 
+      values_from = "GROUP"
     ) |> 
     arrange(PRODUCT)
     
@@ -61,8 +64,8 @@ perform_senso_mapping <- function(data_profiles,
   rownames(data_large) <- data_large$PRODUCT
   data_large <- data_large[, -1]
   
-  # Perform PCA
-  res_pca <- PCA(
+  # Perform MCA
+  res_mca <- MCA(
     X = data_large, 
     graph = FALSE, 
     ...
@@ -70,7 +73,7 @@ perform_senso_mapping <- function(data_profiles,
   
   # Plot the products map
   ## -- Find the products coordinates and take only the 2 first ones 
-  coord_prod <- as.data.frame(res_pca$ind$coord[, 1:2])
+  coord_prod <- as.data.frame(res_mca$ind$coord[, 1:2])
   colnames(coord_prod) <- c("dim1", "dim2")
   
   ## -- Extra info about products
@@ -90,7 +93,7 @@ perform_senso_mapping <- function(data_profiles,
       type = "scatter",
       mode = "markers",
       marker = list(size = 6, color = "black"),
-      showlegend = TRUE
+      showlegend = FALSE
     ) |>
     layout(
       legend = list(
@@ -107,7 +110,7 @@ perform_senso_mapping <- function(data_profiles,
         zerolinecolor = "#D6D5D5",
         scaleanchor = "y",
         showgrid = FALSE,
-        title = paste("Dim 1 - ", round(res_pca$eig[1, 2], 2), "%", sep = ""),
+        title = paste("Dim 1 - ", round(res_mca$eig[1, 2], 2), "%", sep = ""),
         titlefont = list(color = "#444444", size = 13),
         tickfont = list(size = 10, color = "#444444"),
         showline = TRUE,
@@ -119,7 +122,7 @@ perform_senso_mapping <- function(data_profiles,
         zerolinecolor = "#D6D5D5",
         scaleanchor = "x",
         showgrid = FALSE,
-        title = paste("Dim 2 - ", round(res_pca$eig[2, 2], 2), "%", sep =""),
+        title = paste("Dim 2 - ", round(res_mca$eig[2, 2], 2), "%", sep =""),
         titlefont = list(color = "#444444", size = 13),
         tickfont = list(size = 10, color = "#444444"),
         showline = TRUE,
@@ -130,43 +133,32 @@ perform_senso_mapping <- function(data_profiles,
     )
 
   # Plot the attributes map
-  ## -- Find the attributes coordinates and take only the 2 first one 
-  coord_attr <- as.data.frame(res_pca$var$coord[, 1:2])
+  ## -- Find the attributes x consumer coordinates and take only the 2 first one 
+  coord_attr <- as.data.frame(res_mca$var$coord[, 1:2])
   colnames(coord_attr) <- c("dim1", "dim2")
   coord_attr[, "attribute"] <- rownames(coord_attr)
   
+  ## -- Compute the barycenter of the attributes
+  coord_attr <- coord_attr |> 
+    mutate(attribute = str_remove_all(attribute, "\\d+_")) |> 
+    group_by(attribute) |> 
+    summarise(
+      dim1 = mean(dim1),
+      dim2 = mean(dim2)
+    ) |> 
+    ungroup()
+
   ## -- Plot
   inter_var_plot <- plot_ly() |>
         add_trace(
           data = coord_attr,
           x = ~ dim1 ,
           y = ~ dim2,
-          hoverinfo = "text",
-          hoverlabel = list(bgcolor = "black", font = list(color = "white")),
-          # text = text.tooltip,
-          type = "scatter", mode = "markers",
-          marker = list(size = 6, color = "white"),
-          showlegend = TRUE) |>
-        add_annotations(
-          data = coord_attr,
-          axref = "x", 
-          ax = ~ dim1, 
-          aref = "x", 
-          x = 0,
-          ayref = "y", 
-          ay = ~ dim2, 
-          aref = "y", 
-          y = 0,
-          text = coord_attr$attribute, 
-          arrowhead = 0, arrowcolor = "black") |>
+          text = ~ attribute,
+          type = "scatter", 
+          mode = "text",
+          showlegend = FALSE) |>
     layout(
-      shapes = list(
-        list(type = "circle",
-             xref = 'x', x0 = -1, x1 = 1,
-             yref = 'y', y0 = -1, y1 = 1,
-             fillcolor = "#55B4D2", 
-             line = list(color = "#55B4D2"),
-             opacity = 0.1)),
       legend = list(
         orientation = "h",
         xanchor = "center",
@@ -178,10 +170,14 @@ perform_senso_mapping <- function(data_profiles,
         size = 14, color = "#444444"
       )),
       xaxis = list(
+        range = c(
+          min(res_mca$ind$coord[, 1], pull(coord_attr[, 1+1])),
+          max(res_mca$ind$coord[, 1], pull(coord_attr[, 1+1]))
+        ),
         zerolinecolor = "#D6D5D5",
         scaleanchor = "y",
         showgrid = FALSE,
-        title = paste("Dim 1 - ", round(res_pca$eig[1, 2], 2), "%", sep =
+        title = paste("Dim 1 - ", round(res_mca$eig[1, 2], 2), "%", sep =
                         ""),
         titlefont = list(color = "#444444", size = 13),
         tickfont = list(size = 10, color = "#444444"),
@@ -191,10 +187,14 @@ perform_senso_mapping <- function(data_profiles,
         linewidth = 1
       ),
       yaxis = list(
+        range = c(
+          min(res_mca$ind$coord[, 2], pull(coord_attr[, 2+1])),
+          max(res_mca$ind$coord[, 2], pull(coord_attr[, 2+1]))
+        ),
         zerolinecolor = "#D6D5D5",
         scaleanchor = "x",
         showgrid = FALSE,
-        title = paste("Dim 2 - ", round(res_pca$eig[2, 2], 2), "%", sep =
+        title = paste("Dim 2 - ", round(res_mca$eig[2, 2], 2), "%", sep =
                         ""),
         titlefont = list(color = "#444444", size = 13),
         tickfont = list(size = 10, color = "#444444"),
@@ -207,7 +207,8 @@ perform_senso_mapping <- function(data_profiles,
 
   return(
     list(
-      res_pca = res_pca,
+      coord_prod = coord_prod,
+      coord_attr = coord_attr,
       vec_info_tooltip = vec_info,
       inter_ind_plot = inter_ind_plot,
       inter_var_plot = inter_var_plot
@@ -218,11 +219,11 @@ perform_senso_mapping <- function(data_profiles,
 ```
 
 ```{r examples-perform_senso_mapping, out.width='100%', out.height='100%'}
-data("data_profiles_toy")
+data("data_sensory_toy")
 data("data_products_toy")
 
 res_mapping <- perform_senso_mapping(
-  data_profiles = data_profiles_toy,
+  data_sensory = data_sensory_toy,
   data_products = data_products_toy
 )
 
@@ -233,11 +234,11 @@ res_mapping$inter_var_plot # variables (sensory attributes) plot
 ```{r tests-perform_senso_mapping}
 test_that("perform_senso_mapping works", {
 
-  data("data_profiles_toy")
+  data("data_sensory_toy")
   data("data_products_toy")
   
   plots_mapping <- perform_senso_mapping(
-    data_profiles = data_profiles_toy,
+    data_sensory = data_sensory_toy,
     data_products = data_products_toy
   )
   
@@ -247,16 +248,16 @@ test_that("perform_senso_mapping works", {
   # Test an error is the parameter is not a dataframe
   expect_error(
     object = perform_senso_mapping(
-      data_profiles = data_profiles_toy,
+      data_sensory = data_sensory_toy,
       data_products = 1), 
     regexp = "The data 'data_products' you provided is not a dataframe"
   )
   
   expect_error(
     object = perform_senso_mapping(
-      data_profiles = 1,
+      data_sensory = 1,
       data_products = data_products_toy), 
-    regexp = "The data 'data_profiles' you provided is not a dataframe"
+    regexp = "The data 'data_sensory' you provided is not a dataframe"
   )
 
 })
