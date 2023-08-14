@@ -114,41 +114,41 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># List tables in the sensory database</span></span></span>
 <span class="r-in"><span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbListTables.html" class="external-link">dbListTables</a></span><span class="op">(</span><span class="va">con_db</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HEDONIC"  "PRODUCTS" "PROFILES" "SESSIONS"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "HEDONIC"  "PRODUCTS" "SENSORY"  "SESSIONS"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Read the sensory profiles</span></span></span>
-<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con_db</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html" class="external-link">sql</a></span><span class="op">(</span><span class="st">"SELECT * FROM PROFILES LIMIT 10"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Read the sensory data</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con_db</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html" class="external-link">sql</a></span><span class="op">(</span><span class="st">"SELECT * FROM SENSORY LIMIT 10"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Source:   SQL [10 x 4]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Database: sqlite 3.41.2 [/home/runner/work/_temp/Library/sensoreport/database/sensory_db.sqlite]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SESSION  PRODUCT ATTRIBUTE        SCORE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SESS2301 PROD1   Color Intensity 8.16  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SESS2301 PROD1   Odor Intensity  5.77  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SESS2301 PROD1   Odor Orange     5.64  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SESS2301 PROD1   Odor Banana     3.74  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SESS2301 PROD1   Odor Mango      6.11  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SESS2301 PROD1   Odor Lemon      4.81  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SESS2301 PROD1   Strongness      8.66  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SESS2301 PROD1   Sweet           6.75  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SESS2301 PROD1   Acidity         7.71  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SESS2301 PROD1   Bitterness      0.013<span style="text-decoration: underline;">5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    PRODUCT SESSION  CONSUMER GROUP   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> PROD1   SESS2301 1        pear    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> PROD1   SESS2301 2        citrus  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> PROD1   SESS2301 3        sugar   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> PROD1   SESS2301 4        rasperry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> PROD1   SESS2301 5        flowers </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> PROD1   SESS2301 6        flowers </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> PROD1   SESS2301 7        rasperry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> PROD1   SESS2301 8        vanilla </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> PROD1   SESS2301 9        sugar   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> PROD1   SESS2301 10       citrus  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Read the hedonic data</span></span></span>
 <span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con_db</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html" class="external-link">sql</a></span><span class="op">(</span><span class="st">"SELECT * FROM HEDONIC LIMIT 10"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Source:   SQL [10 x 4]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Database: sqlite 3.41.2 [/home/runner/work/_temp/Library/sensoreport/database/sensory_db.sqlite]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SESSION  PRODUCT CONSUMER SCORE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SESS2301 PROD1   1        4.40 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> SESS2301 PROD1   2        3.71 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> SESS2301 PROD1   3        0.322</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> SESS2301 PROD1   4        5.18 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> SESS2301 PROD1   5        6.78 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> SESS2301 PROD1   6        2.79 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> SESS2301 PROD1   7        1.42 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> SESS2301 PROD1   8        5.07 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> SESS2301 PROD1   9        4.07 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> SESS2301 PROD1   10       2.05 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    PRODUCT SESSION  CONSUMER SCORE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> PROD1   SESS2301 1            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> PROD1   SESS2301 2            2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> PROD1   SESS2301 3            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> PROD1   SESS2301 4            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> PROD1   SESS2301 5            2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> PROD1   SESS2301 6            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> PROD1   SESS2301 7            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> PROD1   SESS2301 8            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> PROD1   SESS2301 9            3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> PROD1   SESS2301 10           3</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Read the sessions data</span></span></span>
 <span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html" class="external-link">tbl</a></span><span class="op">(</span><span class="va">con_db</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/sql.html" class="external-link">sql</a></span><span class="op">(</span><span class="st">"SELECT * FROM SESSIONS"</span><span class="op">)</span><span class="op">)</span></span></span>
