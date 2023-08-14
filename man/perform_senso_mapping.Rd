@@ -2,29 +2,29 @@
 % Please edit documentation in R/perform_senso_mapping.R
 \name{perform_senso_mapping}
 \alias{perform_senso_mapping}
-\title{Transform the sensory data to a large format and perform a PCA}
+\title{Transform the sensory data to a large format and perform a MCA}
 \usage{
-perform_senso_mapping(data_profiles, data_products, ...)
+perform_senso_mapping(data_sensory, data_products, ...)
 }
 \arguments{
-\item{data_profiles}{Tibble. Table with the sensory data.}
+\item{data_sensory}{Tibble. Table with the sensory data.}
 
 \item{data_products}{Tibble. Table with the info about products.}
 
-\item{...}{Other parameters of the FactoMineR::PCA() function.}
+\item{...}{Other parameters of the FactoMineR::MCA() function.}
 }
 \value{
-A list of 2 plotly graphs: the PCA ind plot and the PCA var plot
+A list of 2 plotly graphs: the MCA ind plot and the MCA attributes
 }
 \description{
-Transform the sensory data to a large format and perform a PCA
+Transform the sensory data to a large format and perform a MCA
 }
 \examples{
-data("data_profiles_toy")
+data("data_sensory_toy")
 data("data_products_toy")
 
 res_mapping <- perform_senso_mapping(
-  data_profiles = data_profiles_toy,
+  data_sensory = data_sensory_toy,
   data_products = data_products_toy
 )
 

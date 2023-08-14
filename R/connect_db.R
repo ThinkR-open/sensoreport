@@ -19,7 +19,7 @@
 #' DBI::dbListTables(con_db)
 #'
 #' # Read the sensory profiles
-#' dplyr::tbl(con_db, dplyr::sql("SELECT * FROM PROFILES LIMIT 10"))
+#' dplyr::tbl(con_db, dplyr::sql("SELECT * FROM SENSORY LIMIT 10"))
 #'
 #' # Read the hedonic data
 #' dplyr::tbl(con_db, dplyr::sql("SELECT * FROM HEDONIC LIMIT 10"))

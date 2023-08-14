@@ -40,9 +40,9 @@ Imports:
     tools,
     withr
 Suggests: 
+    dbplyr,
     knitr,
     rmarkdown,
-    SensoMineR,
     testthat
 VignetteBuilder: 
     knitr

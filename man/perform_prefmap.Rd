@@ -30,10 +30,12 @@ A plotly preference mapping plot
 Perform the preference mapping
 }
 \examples{
+data("data_sensory_toy")
+data("data_products_toy")
 data("data_hedonic_toy")
 
 res_mapping <- perform_senso_mapping(
-  data_profiles = data_profiles_toy,
+  data_sensory = data_sensory_toy,
   data_products = data_products_toy
 )
 

@@ -4,10 +4,10 @@
 \alias{plot_unidim_analysis}
 \title{Create the plot with the unidimensional analysis}
 \usage{
-plot_unidim_analysis(data_profiles)
+plot_unidim_analysis(data_sensory)
 }
 \arguments{
-\item{data_profiles}{Tibble. The sensory data.}
+\item{data_sensory}{Tibble. The sensory data.}
 }
 \value{
 A ggplotly
@@ -16,9 +16,9 @@ A ggplotly
 Create the plot with the unidimensional analysis
 }
 \examples{
-data("data_profiles_toy")
+data("data_sensory_toy")
 
 plot_unidim_analysis(
-  data_profiles = data_profiles_toy
+  data_sensory = data_sensory_toy
 )
 }

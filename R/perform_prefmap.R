@@ -18,10 +18,12 @@
 #' @return A plotly preference mapping plot
 #' @export
 #' @examples
+#' data("data_sensory_toy")
+#' data("data_products_toy")
 #' data("data_hedonic_toy")
 #'
 #' res_mapping <- perform_senso_mapping(
-#'   data_profiles = data_profiles_toy,
+#'   data_sensory = data_sensory_toy,
 #'   data_products = data_products_toy
 #' )
 #'
@@ -41,12 +43,12 @@ perform_prefmap <- function(res_mapping,
       "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
     )
   } else {
-    if (any(names(res_mapping) != c("res_pca", "vec_info_tooltip", "inter_ind_plot", "inter_var_plot"))) {
+    if (any(names(res_mapping) != c("res_mca", "vec_info_tooltip", "inter_ind_plot", "inter_var_plot"))) {
       stop(
         "Are you sure the parameter 'res_mapping' is returned by the perform_senso_mapping() function?"
       )
     } else {
-      if (isFALSE(inherits(res_mapping$res_pca, "PCA")) |
+      if (isFALSE(inherits(res_mapping$res_mca, "MCA")) |
           isFALSE(inherits(res_mapping$vec_info_tooltip, "glue")) |
           isFALSE(inherits(res_mapping$inter_ind_plot, "plotly")) |
           isFALSE(inherits(res_mapping$inter_var_plot, "plotly"))) {
@@ -63,7 +65,7 @@ perform_prefmap <- function(res_mapping,
   
   # Find the ind coordinates
   ## -- Find the products coordinates and take only the 2 first ones 
-  coord_prod <- as.data.frame(res_mapping$res_pca$ind$coord[, 1:2])
+  coord_prod <- as.data.frame(res_mapping$res_mca$ind$coord[, 1:2])
   colnames(coord_prod) <- c("dim1", "dim2")
   
   # Create a grid to compute the surface response
@@ -165,7 +167,7 @@ perform_prefmap <- function(res_mapping,
       colorbar = list(
         len = 1,
         lenmode = "fraction",
-        title = "% of panelists\nwho like the product")
+        title = "% of consumers\nwho like the product")
     ) |> 
     layout(
       title = list(
