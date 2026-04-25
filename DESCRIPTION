@@ -12,8 +12,8 @@ Description: A toy Shiny app to query a database in which sensory data are
     enable sensory analysts and panel leaders to spend less time preparing
     reports, and add more value to their work.
 License: MIT + file LICENSE
-Depends: 
-    R (>= 2.10)
+Depends:
+    R (>= 4.3)
 Imports: 
     bslib,
     config,
